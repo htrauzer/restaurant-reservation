@@ -1,0 +1,26 @@
+.floor-plan-container {
+    display: flex;
+    flex-direction: column; /* This stacks them vertically */
+    align-items: center;    /* This centers the zones horizontally */
+    gap: 20px;
+    padding: 20px;
+}
+
+.zone-box {
+    border: 2px solid #333;
+    width: 400px; /* Wider to accommodate side-by-side tables */
+    height: 200px; /* Adjust height as needed */
+    position: relative;
+    background-color: #f9f9f9;
+}
+
+.table-div {
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+}
