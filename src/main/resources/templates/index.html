@@ -1,21 +1,57 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
+    <title>Restaurant Reservation</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
     <title>Restaurant Reservation</title>
 </head>
 <body>
     <h1>Restaurant Tables</h1>
-    <table border="1">
-        <tr>
-            <th>Zone</th>
-            <th>Seats</th>
-            <th>Occupied</th>
-        </tr>
-        <tr th:each="table : ${tables}">
-            <td th:text="${table.zone}"></td>
-            <td th:text="${table.seats}"></td>
-            <td th:text="${table.occupied}"></td>
-        </tr>
-    </table>
+    
+    <div class="floor-plan-container">
+    <div class="zone-box">
+        <h3>Main Hall</h3>
+        <div th:each="table : ${tables}" th:if="${table.zone == 'Main Hall'}"
+             th:classappend="table-div"
+             th:style="'left: ' + ${table.xCoordinate} + 'px; top: ' + ${table.yCoordinate} + 'px; background-color: ' + (${table.isOccupied} ? 'red' : 'green') + ';'"
+             th:text="${table.seats}">
+        </div>        
+    </div>
+
+    <div class="zone-box">
+        <h3>Private Room</h3>
+        <div th:each="table : ${tables}" th:if="${table.zone == 'Private Room'}"
+             th:classappend="table-div"
+             th:style="'left: ' + ${table.xCoordinate} + 'px; top: ' + ${table.yCoordinate} + 'px; background-color: ' + (${table.isOccupied} ? 'red' : 'green') + ';'"
+             th:text="${table.seats}">
+        </div>
+    </div>
+
+    <div class="zone-box">
+        <h3>Terrace</h3>
+        <div th:each="table : ${tables}" th:if="${table.zone == 'Terrace'}"
+             th:classappend="table-div"
+             th:style="'left: ' + ${table.xCoordinate} + 'px; top: ' + ${table.yCoordinate} + 'px; background-color: ' + (${table.isOccupied} ? 'red' : 'green') + ';'"
+             th:text="${table.seats}">
+        </div>
+    </div>
+</div>
+
+<table border="1">
+    <tr>
+        <th>Zone</th>
+        <th>Seats</th>
+        <th>Occupied</th>
+    </tr>
+    <tr th:each="table : ${tables}">
+        <td th:text="${table.zone}"></td>
+        <td th:text="${table.seats}"></td>
+        <td th:text="${table.isOccupied}"></td>
+    </tr>
+</table>
+    
+    
+</div>
 </body>
 </html>
