@@ -14,13 +14,20 @@
     background-color: #f9f9f9;
 }
 
-.table-div {
-    width: 40px;
-    height: 40px;
-    position: absolute;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-weight: bold;
+.info-panel {
+    width: 250px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    background: #f9f9f9;
+    position: sticky; /* Keeps it on screen if you scroll */
+    top: 20px;
 }
+
+.table-div {
+    cursor: pointer; /* Makes it look clickable */
+    transition: transform 0.2s;
+}
+
+.table-div:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
