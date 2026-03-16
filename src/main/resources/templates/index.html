@@ -55,21 +55,7 @@
                 </button>
             </div>
         </div>
-    </div>
-
-<table border="1">
-    <tr>
-        <th>Zone</th>
-        <th>Seats</th>
-        <th>Occupied</th>
-    </tr>
-    <tr th:each="table : ${tables}">
-        <td th:text="${table.zone}"></td>
-        <td th:text="${table.seats}"></td>
-        <td th:text="${table.isOccupied}"></td>
-    </tr>
-</table> 
-    
+    </div>    
 </div>
 
 <script th:src="@{/js/script.js}"></script>
