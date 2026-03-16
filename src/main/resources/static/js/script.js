@@ -4,13 +4,17 @@ function filterByTime(selectedHour) {
 
     // 1. Highlight the button
     document.querySelectorAll('.hour-btn').forEach(btn => btn.classList.remove('active'));
-    event.currentTarget.classList.add('active');
+    
+    // Safety check for the event trigger
+    if (event && event.currentTarget) {
+        event.currentTarget.classList.add('active');
+    }
 
     // 2. Filter the tables
     const tables = document.querySelectorAll('.table-div');
     
     tables.forEach(table => {
-        const bookedSlots = table.getAttribute('data-slots'); // String like "[12, 13]"
+        const bookedSlots = table.getAttribute('data-slots'); 
         
         // Logic: Is it busy at hour OR next hour?
         const isBusyNow = bookedSlots.includes(hour.toString());
@@ -25,3 +29,14 @@ function filterByTime(selectedHour) {
         }
     });
 }
+
+// This runs as soon as the browser finishes loading the page
+window.addEventListener('load', () => {
+// Automatically select 12:00 to show the initial random state
+filterByTime('12');
+
+// This part makes the first button (12:00) look active/blue on load
+    const firstBtn = document.querySelector('.hour-btn');
+    if (firstBtn) firstBtn.classList.add('active');
+
+});

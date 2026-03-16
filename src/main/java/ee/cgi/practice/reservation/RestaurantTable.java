@@ -69,4 +69,7 @@ public class RestaurantTable {
     public List<Integer> getBookedSlots() {
         return bookedSlots;
     }
+    public void setBookedSlots(List<Integer> bookedSlots) {
+        this.bookedSlots = bookedSlots;
+    }
 }
