@@ -1,35 +1,36 @@
 function updateTableVisuals() {
-    // 1. Get State
+    // 1. Get State (FIXED: typo was 'aparseInt')
     const activeBtn = document.querySelector('.hour-btn.active');
-    const hour = parseInt(activeBtn ? activeBtn.innerText : '12');
-    const nextHour = hour + 1;
+    const selectedHour = parseInt(activeBtn ? activeBtn.innerText : '12');
 
     // 2. Get Filter Preferences
-    const prefs = {
+    const filters = {
         window: document.getElementById('pref-window').checked,
         corner: document.getElementById('pref-corner').checked,
         divan:  document.getElementById('pref-divan').checked
     };
 
-    // 3. Apply logic to all tables
+    // 3. Process each table
     document.querySelectorAll('.table-div').forEach(table => {
-        const bookedSlots = table.getAttribute('data-slots');
-        const isBusy = bookedSlots.includes(hour.toString()) || 
-                       bookedSlots.includes(nextHour.toString());
+        // A. Booking Logic (RANDOMIZED)
+        // Handle empty or null data safely
+        const rawSlots = table.getAttribute('data-slots') || "";
+        const bookedSlots = rawSlots.replace(/[\[\]]/g, '').split(',')
+                                    .filter(s => s.trim() !== "")
+                                    .map(s => parseInt(s.trim()));
+        
+        const isBusy = bookedSlots.includes(selectedHour);
+        
+        // Apply Color (Gray if busy, Green if free)
+        table.style.backgroundColor = isBusy ? "#95a5a6" : "#2ecc71";
 
-        // Check matching prefs (only if box is checked)
-        const matches = (!prefs.window || table.dataset.window === 'true') &&
-                        (!prefs.corner || table.dataset.corner === 'true') &&
-                        (!prefs.divan  || table.dataset.divan  === 'true');
+        // B. Preference Logic (STATIC)
+        const matches = (!filters.window || table.dataset.window === 'true') &&
+                        (!filters.corner || table.dataset.corner === 'true') &&
+                        (!filters.divan  || table.dataset.divan  === 'true');
 
-        // Visual logic: Dim if not matching, then gray if busy, green if free
-        if (!matches) {
-            table.style.opacity = "0.2";
-            table.style.backgroundColor = "#bdc3c7";
-        } else {
-            table.style.opacity = "1";
-            table.style.backgroundColor = isBusy ? "#95a5a6" : "#2ecc71";
-        }
+        // Apply Opacity (1 if it matches filters, 0.2 if not)
+        table.style.opacity = matches ? "1" : "0.2";
     });
 }
 
@@ -40,6 +41,8 @@ function filterByTime(event, selectedHour) {
 }
 
 window.addEventListener('load', () => {
-    document.querySelectorAll('.hour-btn')[0]?.classList.add('active');
+    // Initialize active state
+    const firstBtn = document.querySelector('.hour-btn');
+    if (firstBtn) firstBtn.classList.add('active');
     updateTableVisuals();
 });

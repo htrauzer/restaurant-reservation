@@ -49,9 +49,9 @@
             <h4>Select Time</h4>
             <div class="time-buttons-stack">
                 <button th:each="hour : ${#numbers.sequence(12, 23)}" 
-                        class="hour-btn"
-                        th:attr="onclick=|filterByTime('${hour}')|">
-                    <span th:text="${hour} + ':00'"></span>
+                    class="hour-btn"
+                    th:attr="onclick=|filterByTime(event, '${hour}')|"
+                    th:text="${hour} + ':00'">
                 </button>
             </div>
         </div>
