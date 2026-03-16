@@ -1,24 +1,27 @@
-function showTimetable(tableId, bookedSlots) {
-    const tableElement = document.getElementById('master-timetable');
-    const titleElement = document.getElementById('selected-table-name');
+function filterByTime(selectedHour) {
+    const hour = parseInt(selectedHour);
+    const nextHour = hour + 1;
+
+    // 1. Highlight the button
+    document.querySelectorAll('.hour-btn').forEach(btn => btn.classList.remove('active'));
+    event.currentTarget.classList.add('active');
+
+    // 2. Filter the tables
+    const tables = document.querySelectorAll('.table-div');
     
-    tableElement.style.display = 'table';
-    titleElement.innerText = "Table #" + tableId;
-
-    const tbody = document.getElementById('timetable-body');
-    tbody.innerHTML = '';
-
-    for (let hour = 12; hour <= 23; hour++) {
-        // BookedSlots comes in as a string like "[12, 13, 14]" from Thymeleaf
-        const isBusy = bookedSlots.includes(hour.toString());
+    tables.forEach(table => {
+        const bookedSlots = table.getAttribute('data-slots'); // String like "[12, 13]"
         
-        const row = document.createElement('tr');
-        row.className = isBusy ? 'busy-row' : 'free-row';
-        
-        row.innerHTML = `
-            <td>${hour}:00</td>
-            <td>${isBusy ? 'Occupied' : 'Available'}</td>
-        `;
-        tbody.appendChild(row);
-    }
+        // Logic: Is it busy at hour OR next hour?
+        const isBusyNow = bookedSlots.includes(hour.toString());
+        const isBusyNext = bookedSlots.includes(nextHour.toString());
+
+        if (isBusyNow || isBusyNext) {
+            table.style.backgroundColor = "#95a5a6"; // Gray
+            table.style.opacity = "0.4";
+        } else {
+            table.style.backgroundColor = "#2ecc71"; // Green
+            table.style.opacity = "1";
+        }
+    });
 }
