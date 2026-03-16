@@ -31,6 +31,8 @@ public class RestaurantController {
                 // 40% chance that this hour is booked
                 if (random.nextInt(10) < 4) { 
                     randomSlots.add(hour);
+                    randomSlots.add(hour + 1); // Automatically book next hour
+                    hour++;
                 }
             }
             // Set the temporary random slots for this page load
