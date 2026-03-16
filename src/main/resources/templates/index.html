@@ -14,9 +14,10 @@
             <div class="zone-box">
                 <h3>Main Hall</h3>
                 <div th:each="table : ${tables}" th:if="${table.zone == 'Main Hall'}"
-                    th:classappend="table-div"
-                    th:style="'left: ' + ${table.xCoordinate} + 'px; top: ' + ${table.yCoordinate} + 'px; background-color: ' + (${table.isOccupied} ? 'red' : 'green') + ';'"
-                    th:attr="onclick=|showTimetable('${table.id}', '${table.bookedSlots}')|"
+                    class="table-div"
+                    th:id="'table-' + ${table.id}"
+                    th:data-slots="${table.bookedSlots}"
+                    th:style="'left: ' + ${table.xCoordinate} + 'px; top: ' + ${table.yCoordinate} + 'px;'"
                     th:text="${table.seats}">
                 </div>        
             </div>
@@ -24,9 +25,10 @@
             <div class="zone-box">
                 <h3>Private Room</h3>
                 <div th:each="table : ${tables}" th:if="${table.zone == 'Private Room'}"
-                    th:classappend="table-div"
-                    th:style="'left: ' + ${table.xCoordinate} + 'px; top: ' + ${table.yCoordinate} + 'px; background-color: ' + (${table.isOccupied} ? 'red' : 'green') + ';'"
-                    th:attr="onclick=|showTimetable('${table.id}', '${table.bookedSlots}')|"
+                    class="table-div"
+                    th:id="'table-' + ${table.id}"
+                    th:data-slots="${table.bookedSlots}"
+                    th:style="'left: ' + ${table.xCoordinate} + 'px; top: ' + ${table.yCoordinate} + 'px;'"
                     th:text="${table.seats}">
                 </div>
             </div>
@@ -34,23 +36,24 @@
             <div class="zone-box">
                 <h3>Terrace</h3>
                 <div th:each="table : ${tables}" th:if="${table.zone == 'Terrace'}"
-                    th:classappend="table-div"
-                    th:style="'left: ' + ${table.xCoordinate} + 'px; top: ' + ${table.yCoordinate} + 'px; background-color: ' + (${table.isOccupied} ? 'red' : 'green') + ';'"
-                    th:attr="onclick=|showTimetable('${table.id}', '${table.bookedSlots}')|"
+                    class="table-div"
+                    th:id="'table-' + ${table.id}"
+                    th:data-slots="${table.bookedSlots}"
+                    th:style="'left: ' + ${table.xCoordinate} + 'px; top: ' + ${table.yCoordinate} + 'px;'"
                     th:text="${table.seats}">
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="vertical-time-bar">
-        <h4>Select Time</h4>
-        <div class="time-buttons-stack">
-            <button th:each="hour : ${#numbers.sequence(12, 23)}" 
-                    class="hour-btn"
-                    th:attr="onclick=|filterByTime('${hour}')|">
-                <span th:text="${hour} + ':00'"></span>
-            </button>
+        <div class="vertical-time-bar">
+            <h4>Select Time</h4>
+            <div class="time-buttons-stack">
+                <button th:each="hour : ${#numbers.sequence(12, 23)}" 
+                        class="hour-btn"
+                        th:attr="onclick=|filterByTime('${hour}')|">
+                    <span th:text="${hour} + ':00'"></span>
+                </button>
+            </div>
         </div>
     </div>
 

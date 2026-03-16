@@ -1,8 +1,9 @@
 .main-dashboard {
-    display: flex;         /* Puts floor plan and time bar side-by-side */
-    gap: 20px;
-    padding: 20px;
+    display: flex;
+    justify-content: flex-start;
     align-items: flex-start;
+    gap: 40px; /* Space between the zones and the time bar */
+    padding: 20px;
 }
 
 .floor-plan-container {
@@ -14,20 +15,43 @@
 }
 
 .zone-box {
+    position: relative;
     border: 2px solid #333;
     width: 400px; /* Wider to accommodate side-by-side tables */
     height: 200px; /* Adjust height as needed */
-    position: relative;
     background-color: #f9f9f9;
+    margin-bottom: 20px;
+    overflow: hidden; /* Keeps tables from "bleeding" out of the box */
+}
+
+.table-div {
+    position: absolute;
+    width: 45px;               /* Width of the square */
+    height: 45px;              /* Height of the square */
+    background-color: #3498db; /* A nice professional Blue */
+    color: white;              /* White text for the seat numbers */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;        /* Slightly rounded corners */
+    font-weight: bold;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+    transition: all 0.3s ease; /* Smooth color changes */
+}
+
+/* Optional: Add a hover effect so you know it's interactive */
+.table-div:hover {
+    transform: scale(1.05);
+    filter: brightness(1.1);
 }
 
 .vertical-time-bar {
-    width: 120px;
-    background: #2c3e50;   /* Dark professional blue */
+    width: 150px;
+    position: sticky; /* Keeps it visible while scrolling */
+    top: 20px;
+    background: #2c3e50;
     padding: 15px;
-    border-radius: 8px;
-    color: white;
-    box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+    border-radius: 10px;
 }
 
 .time-buttons-stack {
