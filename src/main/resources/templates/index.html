@@ -16,6 +16,7 @@
                 <div th:each="table : ${tables}" th:if="${table.zone == 'Main Hall'}"
                     class="table-div"
                     th:id="'table-' + ${table.id}"
+                    th:data-seats="${table.seats}"
                     th:data-window="${table.window}"
                     th:data-corner="${table.corner}"
                     th:data-divan="${table.divan}"
@@ -30,6 +31,7 @@
                 <div th:each="table : ${tables}" th:if="${table.zone == 'Private Room'}"
                     class="table-div"
                     th:id="'table-' + ${table.id}"
+                    th:data-seats="${table.seats}"
                     th:data-window="${table.window}"
                     th:data-corner="${table.corner}"
                     th:data-divan="${table.divan}"
@@ -44,6 +46,7 @@
                 <div th:each="table : ${tables}" th:if="${table.zone == 'Terrace'}"
                     class="table-div"
                     th:id="'table-' + ${table.id}"
+                    th:data-seats="${table.seats}"
                     th:data-window="${table.window}"
                     th:data-corner="${table.corner}"
                     th:data-divan="${table.divan}"
@@ -73,6 +76,18 @@
     <label><input type="checkbox" id="pref-corner" onchange="filterTables()"> Corner Table</label>
     <label><input type="checkbox" id="pref-divan" onchange="filterTables()"> Divan</label>
 </div>
+<div class="seat-selection-box">
+    <label th:each="i : ${#numbers.sequence(1, 14)}" class="seat-btn">
+        <input type="radio" name="seatCount" th:value="${i}" onchange="updateTableVisuals()">
+        <span th:text="${i}"></span>
+    </label>
+    
+    <label class="seat-btn more-btn">
+        <input type="radio" name="seatCount" value="more" onchange="updateTableVisuals()">
+        <span>More</span>
+    </label>
+</div>
+<div id="booking-message" style="margin-top: 10px; font-weight: bold; color: #e67e22;"></div>
 
 <script th:src="@{/js/script.js}"></script>
 </body>

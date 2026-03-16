@@ -79,3 +79,34 @@
     font-weight: bold;
     box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
 }
+
+.seat-selection-box {
+    display: flex;
+    flex-wrap: wrap; /* Wraps if screen is narrow */
+    gap: 8px;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.seat-btn {
+    cursor: pointer;
+}
+
+/* Hide the actual radio button but style the span */
+.seat-btn input { display: none; }
+
+.seat-btn span {
+    display: inline-block;
+    padding: 8px 12px;
+    background-color: #3498db; /* Blue */
+    color: white;
+    border-radius: 4px;
+    transition: background 0.3s;
+}
+
+/* Highlight effect when selected */
+.seat-btn input:checked + span {
+    background-color: #2980b9; /* Darker Blue */
+    border: 2px solid #1c2833;
+}
