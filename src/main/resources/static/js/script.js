@@ -1,42 +1,45 @@
-function filterByTime(selectedHour) {
-    const hour = parseInt(selectedHour);
+function updateTableVisuals() {
+    // 1. Get State
+    const activeBtn = document.querySelector('.hour-btn.active');
+    const hour = parseInt(activeBtn ? activeBtn.innerText : '12');
     const nextHour = hour + 1;
 
-    // 1. Highlight the button
-    document.querySelectorAll('.hour-btn').forEach(btn => btn.classList.remove('active'));
-    
-    // Safety check for the event trigger
-    if (event && event.currentTarget) {
-        event.currentTarget.classList.add('active');
-    }
+    // 2. Get Filter Preferences
+    const prefs = {
+        window: document.getElementById('pref-window').checked,
+        corner: document.getElementById('pref-corner').checked,
+        divan:  document.getElementById('pref-divan').checked
+    };
 
-    // 2. Filter the tables
-    const tables = document.querySelectorAll('.table-div');
-    
-    tables.forEach(table => {
-        const bookedSlots = table.getAttribute('data-slots'); 
-        
-        // Logic: Is it busy at hour OR next hour?
-        const isBusyNow = bookedSlots.includes(hour.toString());
-        const isBusyNext = bookedSlots.includes(nextHour.toString());
+    // 3. Apply logic to all tables
+    document.querySelectorAll('.table-div').forEach(table => {
+        const bookedSlots = table.getAttribute('data-slots');
+        const isBusy = bookedSlots.includes(hour.toString()) || 
+                       bookedSlots.includes(nextHour.toString());
 
-        if (isBusyNow || isBusyNext) {
-            table.style.backgroundColor = "#95a5a6"; // Gray
-            table.style.opacity = "0.4";
+        // Check matching prefs (only if box is checked)
+        const matches = (!prefs.window || table.dataset.window === 'true') &&
+                        (!prefs.corner || table.dataset.corner === 'true') &&
+                        (!prefs.divan  || table.dataset.divan  === 'true');
+
+        // Visual logic: Dim if not matching, then gray if busy, green if free
+        if (!matches) {
+            table.style.opacity = "0.2";
+            table.style.backgroundColor = "#bdc3c7";
         } else {
-            table.style.backgroundColor = "#2ecc71"; // Green
             table.style.opacity = "1";
+            table.style.backgroundColor = isBusy ? "#95a5a6" : "#2ecc71";
         }
     });
 }
 
-// This runs as soon as the browser finishes loading the page
+function filterByTime(event, selectedHour) {
+    document.querySelectorAll('.hour-btn').forEach(btn => btn.classList.remove('active'));
+    event.currentTarget.classList.add('active');
+    updateTableVisuals();
+}
+
 window.addEventListener('load', () => {
-// Automatically select 12:00 to show the initial random state
-filterByTime('12');
-
-// This part makes the first button (12:00) look active/blue on load
-    const firstBtn = document.querySelector('.hour-btn');
-    if (firstBtn) firstBtn.classList.add('active');
-
+    document.querySelectorAll('.hour-btn')[0]?.classList.add('active');
+    updateTableVisuals();
 });

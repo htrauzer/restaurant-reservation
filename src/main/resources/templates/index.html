@@ -58,6 +58,13 @@
     </div>    
 </div>
 
+<div class="preferences-bar">
+    <h4>Filters:</h4>
+    <label><input type="checkbox" id="pref-window" onchange="filterTables()"> Near Window</label>
+    <label><input type="checkbox" id="pref-corner" onchange="filterTables()"> Corner Table</label>
+    <label><input type="checkbox" id="pref-divan" onchange="filterTables()"> Divan</label>
+</div>
+
 <script th:src="@{/js/script.js}"></script>
 </body>
 </html>
