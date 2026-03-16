@@ -21,9 +21,9 @@ public class RestaurantReservationApplication {
 			// Zone 1: Main Hall (e.g., 5 tables)
         	repository.save(new RestaurantTable(2, "Main Hall", true, true, false, 50, 50));    //1
 			repository.save(new RestaurantTable(2, "Main Hall", true, false, false, 100, 50));	//2
-			repository.save(new RestaurantTable(4, "Main Hall", false, true, false, 250, 50));   //3
-			repository.save(new RestaurantTable(4, "Main Hall", false, true, false, 50, 150));  //4
-			repository.save(new RestaurantTable(6, "Main Hall", false, false, false, 300, 150));   //5
+			repository.save(new RestaurantTable(6, "Main Hall", false, true, false, 250, 50));   //3
+			repository.save(new RestaurantTable(8, "Main Hall", false, true, false, 50, 150));  //4
+			repository.save(new RestaurantTable(2, "Main Hall", false, false, false, 300, 150));   //5
 			
 			// Zone 2: Private Room (e.g., 4 tables)
 			repository.save(new RestaurantTable(4, "Private Room", false, true, true, 50, 100)); //6
