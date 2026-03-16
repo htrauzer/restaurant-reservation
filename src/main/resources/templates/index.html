@@ -16,6 +16,9 @@
                 <div th:each="table : ${tables}" th:if="${table.zone == 'Main Hall'}"
                     class="table-div"
                     th:id="'table-' + ${table.id}"
+                    th:data-window="${table.window}"
+                    th:data-corner="${table.corner}"
+                    th:data-divan="${table.divan}"
                     th:data-slots="${table.bookedSlots}"
                     th:style="'left: ' + ${table.xCoordinate} + 'px; top: ' + ${table.yCoordinate} + 'px;'"
                     th:text="${table.seats}">
@@ -27,6 +30,9 @@
                 <div th:each="table : ${tables}" th:if="${table.zone == 'Private Room'}"
                     class="table-div"
                     th:id="'table-' + ${table.id}"
+                    th:data-window="${table.window}"
+                    th:data-corner="${table.corner}"
+                    th:data-divan="${table.divan}"
                     th:data-slots="${table.bookedSlots}"
                     th:style="'left: ' + ${table.xCoordinate} + 'px; top: ' + ${table.yCoordinate} + 'px;'"
                     th:text="${table.seats}">
@@ -38,6 +44,9 @@
                 <div th:each="table : ${tables}" th:if="${table.zone == 'Terrace'}"
                     class="table-div"
                     th:id="'table-' + ${table.id}"
+                    th:data-window="${table.window}"
+                    th:data-corner="${table.corner}"
+                    th:data-divan="${table.divan}"
                     th:data-slots="${table.bookedSlots}"
                     th:style="'left: ' + ${table.xCoordinate} + 'px; top: ' + ${table.yCoordinate} + 'px;'"
                     th:text="${table.seats}">

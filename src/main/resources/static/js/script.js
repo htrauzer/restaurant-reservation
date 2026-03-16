@@ -25,9 +25,9 @@ function updateTableVisuals() {
         table.style.backgroundColor = isBusy ? "#95a5a6" : "#2ecc71";
 
         // B. Preference Logic (STATIC)
-        const matches = (!filters.window || table.dataset.window === 'true') &&
-                        (!filters.corner || table.dataset.corner === 'true') &&
-                        (!filters.divan  || table.dataset.divan  === 'true');
+       const matches = (!filters.window || String(table.dataset.window) === 'true') &&
+                       (!filters.corner || String(table.dataset.corner) === 'true') &&
+                       (!filters.divan  || String(table.dataset.divan)  === 'true');
 
         // Apply Opacity (1 if it matches filters, 0.2 if not)
         table.style.opacity = matches ? "1" : "0.2";
