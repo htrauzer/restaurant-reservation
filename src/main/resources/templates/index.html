@@ -1,94 +1,38 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
     <title>Restaurant Reservation</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
-    <title>Restaurant Reservation</title>
 </head>
 <body>
-    <h1>Restaurant Tables</h1>
-    
-    <div class="main-dashboard">
-        <div class="floor-plan-container">
-            <div class="zone-box">
-                <h3>Main Hall</h3>
-                <div th:each="table : ${tables}" th:if="${table.zone == 'Main Hall'}"
-                    class="table-div"
-                    th:id="'table-' + ${table.id}"
-                    th:data-seats="${table.seats}"
-                    th:data-window="${table.window}"
-                    th:data-corner="${table.corner}"
-                    th:data-divan="${table.divan}"
-                    th:data-slots="${table.bookedSlots}"
-                    th:style="'left: ' + ${table.xCoordinate} + 'px; top: ' + ${table.yCoordinate} + 'px;'"
-                    th:text="${table.seats}">
-                </div>        
-            </div>
-
-            <div class="zone-box">
-                <h3>Private Room</h3>
-                <div th:each="table : ${tables}" th:if="${table.zone == 'Private Room'}"
-                    class="table-div"
-                    th:id="'table-' + ${table.id}"
-                    th:data-seats="${table.seats}"
-                    th:data-window="${table.window}"
-                    th:data-corner="${table.corner}"
-                    th:data-divan="${table.divan}"
-                    th:data-slots="${table.bookedSlots}"
-                    th:style="'left: ' + ${table.xCoordinate} + 'px; top: ' + ${table.yCoordinate} + 'px;'"
-                    th:text="${table.seats}">
-                </div>
-            </div>
-
-            <div class="zone-box">
-                <h3>Terrace</h3>
-                <div th:each="table : ${tables}" th:if="${table.zone == 'Terrace'}"
-                    class="table-div"
-                    th:id="'table-' + ${table.id}"
-                    th:data-seats="${table.seats}"
-                    th:data-window="${table.window}"
-                    th:data-corner="${table.corner}"
-                    th:data-divan="${table.divan}"
-                    th:data-slots="${table.bookedSlots}"
-                    th:style="'left: ' + ${table.xCoordinate} + 'px; top: ' + ${table.yCoordinate} + 'px;'"
-                    th:text="${table.seats}">
-                </div>
-            </div>
+    <header>
+        <h1>Карта нашого ресторану</h1>
+        <div class="meal-promo">
+            <p th:text="${specialMeal}">Завантаження страви дня...</p>
         </div>
+    </header>
 
-        <div class="vertical-time-bar">
-            <h4>Select Time</h4>
-            <div class="time-buttons-stack">
-                <button th:each="hour : ${#numbers.sequence(12, 23)}" 
-                    class="hour-btn"
-                    th:attr="onclick=|filterByTime(event, '${hour}')|"
-                    th:text="${hour} + ':00'">
-                </button>
-            </div>
+    <div id="restaurant-map">
+        <div th:each="table : ${tables}" 
+             class="table-item" 
+             th:classappend="${table.zone.toString().toLowerCase()}"
+             th:style="'left: ' + ${table.posX} + 'px; top: ' + ${table.posY} + 'px;'"
+             th:title="'Місць: ' + ${table.capacity} + ' | Зона: ' + ${table.zone}">
+            
+            <span th:text="${table.capacity}"></span>
         </div>
-    </div>    
-</div>
+    </div>
 
-<div class="preferences-bar">
-    <h4>Filters:</h4>
-    <label><input type="checkbox" id="pref-window" onchange="filterTables()"> Near Window</label>
-    <label><input type="checkbox" id="pref-corner" onchange="filterTables()"> Corner Table</label>
-    <label><input type="checkbox" id="pref-divan" onchange="filterTables()"> Divan</label>
+    <div class="legend">
+        <span class="hall">Головний зал</span>
+        <span class="private">Приватні кімнати</span>
+        <span class="terrace">Тераса</span>
+    </div>
+    <div id="bookingModal" style="display:none; position:fixed; top:30%; left:40%; background:white; padding:20px; border:2px solid black; z-index:100;">
+    <h3>Бронювання стола №<span id="modalTableId"></span></h3>
+    <input type="text" id="customerName" placeholder="Ваше ім'я">
+    <button onclick="submitBooking()">Підтвердити</button>
+    <button onclick="document.getElementById('bookingModal').style.display='none'">Скасувати</button>
 </div>
-<div class="seat-selection-box">
-    <label th:each="i : ${#numbers.sequence(1, 14)}" class="seat-btn">
-        <input type="radio" name="seatCount" th:value="${i}" onchange="updateTableVisuals()">
-        <span th:text="${i}"></span>
-    </label>
-    
-    <label class="seat-btn more-btn">
-        <input type="radio" name="seatCount" value="more" onchange="updateTableVisuals()">
-        <span>More</span>
-    </label>
-</div>
-<div id="booking-message" style="margin-top: 10px; font-weight: bold; color: #e67e22;"></div>
-
-<script th:src="@{/js/script.js}"></script>
 </body>
 </html>
