@@ -1,10 +1,12 @@
-# Крок 1: Збірка проєкту (використовуємо образ Maven)
-FROM maven:3.8.5-openjdk-17 AS build
+# Крок 1: Збірка (Maven з Java 21)
+FROM maven:3.9.6-eclipse-temurin-21 AS build
+WORKDIR /app
 COPY . .
 RUN mvn clean package -DskipTests
 
-# Крок 2: Запуск (використовуємо легкий образ JRE)
-FROM openjdk:17-jdk-slim
-COPY --from=build /target/*.jar app.jar
+# Крок 2: Запуск (JRE 21)
+FROM eclipse-temurin:21-jre-alpine
+WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]
