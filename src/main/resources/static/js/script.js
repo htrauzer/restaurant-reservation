@@ -1,58 +1,46 @@
-// Global variable to store the selected table ID
-let currentTable = null;
+let selectedHour = null;
 
 /**
- * Sends filter criteria to the server and highlights available tables
+ * Handle time selection from the left timetable
+ * @param {HTMLElement} element - The clicked DOM element
+ * @param {number} hour - The hour value (12-23)
  */
-function filterTables() {
-    const guests = document.getElementById('guestCount').value;
-    const date = document.getElementById('bookingDate').value;
-    const time = document.getElementById('bookingTime').value;
-    const zone = document.getElementById('zoneSelect').value;
+function selectTime(element, hour) {
+    // English comment: UI feedback for selection
+    document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('active'));
+    element.classList.add('active');
+    
+    selectedHour = hour;
+    
+    // English comment: After selecting time, update table statuses
+    updateTableStatuses();
+}
 
-    // Fetch call to the search API endpoint
-    fetch(`/api/tables/search?guests=${guests}&date=${date}&time=${time}&zone=${zone}`)
+/**
+ * Main filter logic
+ */
+function updateTableStatuses() {
+    if (!selectedHour) return;
+
+    const guests = document.getElementById('guestCount').value;
+    const zone = document.querySelector('input[name="zone"]:checked').value;
+
+    fetch(`/api/tables/search?guests=${guests}&zone=${zone}&time=${selectedHour}`)
     .then(res => res.json())
-    .then(data => {
-        // Reset styles for all tables before highlighting
+    .then(recommended => {
+        // English comment: Set all tables to GREEN (available) by default when time is picked
         document.querySelectorAll('.table-item').forEach(t => {
-            t.style.outline = "none";
-            t.style.boxShadow = "0 3px 6px rgba(0,0,0,0.16)";
+            t.style.backgroundColor = "#2ecc71"; // Green
+            t.style.boxShadow = "none";
         });
-        
-        // Highlight tables returned by the filter logic
-        data.forEach(table => {
+
+        // English comment: Highlight recommended ones in YELLOW
+        recommended.forEach(table => {
             const el = document.querySelector(`[data-id="${table.id}"]`);
             if (el) {
-                el.style.outline = "4px solid #2ecc71";
-                el.style.boxShadow = "0 0 20px #2ecc71";
+                el.style.backgroundColor = "#f1c40f"; // Yellow
+                el.style.boxShadow = "0 0 15px #f1c40f";
             }
         });
     });
-}
-
-/**
- * Opens the modal and sets the current table ID
- */
-function openBooking(el) {
-    currentTable = el.getAttribute('data-id');
-    document.getElementById('modalId').innerText = currentTable;
-    document.getElementById('bookingModal').style.display = 'block';
-}
-
-function closeModal() {
-    document.getElementById('bookingModal').style.display = 'none';
-}
-
-/**
- * Validates input and simulates booking submission
- */
-function confirmBooking() {
-    const name = document.getElementById('userName').value;
-    if (!name) return alert("Name is required!");
-
-    // Log the action (integration with POST /book should go here)
-    console.log(`Booking request for table ${currentTable} by user ${name}`);
-    closeModal();
-    alert("Table reserved successfully!");
 }

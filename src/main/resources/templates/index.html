@@ -2,63 +2,95 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Restaurant Layout & Booking</title>
+    <title>Restaurant Reservation System</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-    <header>
+    <header class="main-header">
         <h1>Restaurant Management System</h1>
+        <div class="meal-promo">
+            <p th:text="${specialMeal}">Today's Special: Loading...</p>
+        </div>
     </header>
 
-    <div class="filter-panel">
-        <input type="number" id="guestCount" placeholder="Guests" min="1" value="2">
-        <select id="zoneSelect">
-            <option value="MAIN_HALL">Main Hall</option>
-            <option value="PRIVATE_ROOMS">Private Rooms</option>
-            <option value="TERRACE">Terrace</option>
-        </select>
-        <input type="date" id="bookingDate" value="2026-03-19">
-        <select id="bookingTime">
-            <option value="12">12:00</option>
-            <option value="14">14:00</option>
-            <option value="18">18:00</option>
-            <option value="20">20:00</option>
-        </select>
-        <button onclick="filterTables()">Find Available</button>
-    </div>
+    <div class="app-layout">
+        <aside class="timetable-column">
+            <div class="gray-box">
+                <h3>Timetable</h3>
+                <div class="time-grid">
+                    <div th:each="hour : ${#numbers.sequence(12, 23)}" 
+                         class="time-slot" 
+                         th:text="${hour} + ':00'"
+                         th:onclick="'selectTime(this, ' + ${hour} + ')'">
+                    </div>
+                </div>
+            </div>
+        </aside>
+    <main class="restaurant-column">
+        <div class="restaurant-layout">
+    
+            <div class="zone main-hall">
+                <h2>Main Hall</h2>
+            </div>
+            <div class="zone private-rooms">
+                <h2>Private Rooms</h2>
+            </div>
+            <div class="zone terrace">
+                <h2>Terrace</h2>
+            </div>
 
-    <div class="restaurant-container">
-        <div class="zones-sidebar">
-            <div class="zone-box"><h2>Main Hall</h2></div>
-            <div class="zone-box"><h2>Private Rooms</h2></div>
-            <div class="zone-box"><h2>Terrace</h2></div>
+            <div th:each="table : ${tables}" 
+                class="table-item" 
+                th:classappend="${ (table.capacity == 2 || table.zone.name() == 'TERRACE') ? 'shape-round' : 'shape-square' }"
+                th:style="'left:' + ${table.posX} + '%; top:' + ${table.posY} + '%;'"
+                th:data-id="${table.id}">
+                <span th:text="${table.capacity}"></span>
+            </div>
         </div>
+    </main>
+        <aside class="parameters-column">
+            <div class="parameter-box">
+                <h3>Filters</h3>
+                
+                <div class="param-group">
+                    <label>Guests:</label>
+                    <input type="number" id="guestCount" min="1" value="2">
+                </div>
 
-        <div class="service-area">
-            <div class="kitchen-decor">KITCHEN / BAR</div>
-        </div>
+                <div class="param-group">
+                    <label>Preferences:</label>
+                    <div class="checkbox-list">
+                        <label><input type="checkbox" name="feature" value="WINDOW"> Window</label>
+                        <label><input type="checkbox" name="feature" value="CORNER"> Corner</label>
+                        <label><input type="checkbox" name="feature" value="SOFA"> Sofa</label>
+                    </div>
+                </div>
 
-        <div th:each="table : ${tables}" 
-             class="table-item" 
-             th:classappend="|${table.zone} ${ (table.capacity == 2 || table.zone.name() == 'TERRACE') ? 'shape-round' : 'shape-square' }|"
-             th:style="'left:' + ${table.posX} + '%; top:' + ${table.posY} + '%;'"
-             th:data-id="${table.id}"
-             onclick="openBooking(this)">
-            <span th:text="${table.capacity}"></span>
-        </div>
+                <div class="param-group">
+                    <label>Zone:</label>
+                    <div class="radio-list">
+                        <label><input type="radio" name="zone" value="MAIN_HALL" checked> Main Hall</label>
+                        <label><input type="radio" name="zone" value="PRIVATE_ROOMS"> Private Room</label>
+                        <label><input type="radio" name="zone" value="TERRACE"> Terrace</label>
+                    </div>
+                </div>
+
+                <button class="search-btn" onclick="filterTables()">Search Tables</button>
+            </div>
+        </aside>
     </div>
 
     <div id="bookingModal" class="modal">
-        <div class="modal-body">
-            <h3>Book Table #<span id="modalId"></span></h3>
-            <input type="text" id="userName" placeholder="Your Name">
+        <div class="modal-content">
+            <h3>Book Table #<span id="modalTableId"></span></h3>
+            <input type="text" id="customerName" placeholder="Customer Name">
             <div class="modal-btns">
-                <button onclick="confirmBooking()">Book</button>
-                <button onclick="closeModal()">Exit</button>
+                <button class="confirm-btn" onclick="submitBooking()">Book Now</button>
+                <button class="cancel-btn" onclick="closeModal()">Close</button>
             </div>
         </div>
     </div>
 
-   <script th:src="@{/js/script.js}"></script>
+    <script th:src="@{/js/script.js}"></script>
 </body>
 </html>
