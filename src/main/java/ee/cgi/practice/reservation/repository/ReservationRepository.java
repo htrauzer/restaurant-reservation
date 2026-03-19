@@ -15,6 +15,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     @Query("SELECT r FROM Reservation r WHERE r.startTime < :requestedEnd AND r.endTime > :requestedStart")
     List<Reservation> findOverlappingReservations(
         @Param("requestedStart") LocalDateTime start, 
-        @Param("requestedEnd") LocalDateTime end
+        @Param("requestedEnd") LocalDateTime end // Назва в лапках має бути як у запиті (:requestedEnd)
     );
 }

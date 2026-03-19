@@ -43,7 +43,7 @@ function refreshTableLayout() {
     
     const guests = document.getElementById('guestCount').value;
     const zoneElement = document.querySelector('input[name="zone"]:checked');
-    const zone = zoneElement ? zoneElement.value : ""; // Порожньо, якщо нічого не обрано
+    const zone = zoneElement ? zoneElement.value : ""; 
     
     const features = Array.from(document.querySelectorAll('input[name="feature"]:checked'))
                           .map(cb => cb.value)
@@ -84,5 +84,46 @@ function refreshTableLayout() {
 
 
 function filterTables() {
-    refreshTableLayout();
+    if (!currentSelectedHour) {
+        alert("Please select a time first!");
+        return;
+    }
+
+    const guests = document.getElementById('guestCount').value;
+    const zoneElement = document.querySelector('input[name="zone"]:checked');
+    
+    if (!zoneElement) {
+        alert("Please select a zone to use the smart search!");
+        return;
+    }
+
+    const zone = zoneElement.value;
+
+    // Запит до нового ендпоінту ReservationService
+    fetch(`/api/reservations/find-available?hour=${currentSelectedHour}&guests=${guests}&zone=${zone}`)
+    .then(res => res.json())
+    .then(tableIds => {
+        // Очищаємо попередні підсвітки (крім сірих/зайнятих)
+        document.querySelectorAll('.table-item').forEach(tableDiv => {
+            if (!tableDiv.classList.contains('status-reserved')) {
+                tableDiv.style.backgroundColor = "#2ecc71"; // Зелений
+                tableDiv.style.boxShadow = "none";
+                tableDiv.style.border = "none";
+            }
+        });
+
+        // Підсвічуємо результати розумного пошуку блакитним кольором
+        tableIds.forEach(id => {
+            const tableDiv = document.querySelector(`.table-item[data-id="${id}"]`);
+            if (tableDiv) {
+                tableDiv.style.backgroundColor = "#3498db"; 
+                tableDiv.style.boxShadow = "0 0 15px #3498db";
+                tableDiv.style.border = "2px solid white";
+            }
+        });
+
+        if (tableIds.length === 0) {
+            alert("No available tables (or pairs) found for this group size.");
+        }
+    });
 }
