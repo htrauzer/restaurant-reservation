@@ -1,5 +1,6 @@
 package ee.cgi.practice.reservation.service;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -8,6 +9,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import ee.cgi.practice.reservation.model.Reservation;
 import ee.cgi.practice.reservation.model.RestaurantTable;
 import ee.cgi.practice.reservation.model.Zone;
 import ee.cgi.practice.reservation.repository.TableRepository;
@@ -21,20 +23,23 @@ public class ReservationService {
         this.tableRepository = tableRepository;
     }
 
-    public List<RestaurantTable> findTablesForGroup(int guests, Zone zone) {
-        // 1. First, try to find a single table that can accommodate the group
-        Optional<RestaurantTable> singleTable = tableRepository.findAll().stream()
-                .filter(t -> t.getZone() == zone)
-                .filter(t -> t.getCapacity() >= guests)
-                .min(Comparator.comparingInt(RestaurantTable::getCapacity));
+    public List<RestaurantTable> findAvailableTables(int guests, Zone zone, LocalDate date, int time) {
+    
+    List<RestaurantTable> allTables = tableRepository.findByZone(zone);
+    
+    List<Reservation> existingReservations = reservationRepository.findByBookingDate(date);
 
-        if (singleTable.isPresent()) {
-            return Collections.singletonList(singleTable.get());
-        }
+    List<RestaurantTable> busyTables = existingReservations.stream()
+        .filter(r -> time >= r.getStartTime() && time < r.getEndTime())
+        .map(Reservation::getRestaurantTable)
+        .toList();
 
-        // 2. If one table is not enough, look for a pair of adjacent tables
-        return findCombinedTables(guests, zone);
-    }
+    List<RestaurantTable> freeTables = allTables.stream()
+        .filter(t -> !busyTables.contains(t))
+        .toList();
+
+    return searchLogic(freeTables, guests); 
+}
 
     private List<RestaurantTable> findCombinedTables(int guests, Zone zone) {
         List<RestaurantTable> tablesInZone = tableRepository.findByZone(zone);

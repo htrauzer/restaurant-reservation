@@ -25,3 +25,23 @@ document.querySelectorAll('.table-icon').forEach(table => {
         updateTableOnServer(id, x, y);
     });
 });
+
+function filterTables() {
+    const guests = document.getElementById('guestCount').value;
+    const date = document.getElementById('bookingDate').value;
+    const time = document.getElementById('bookingTime').value;
+    const zone = document.getElementById('zoneSelect').value;
+
+    fetch(`/api/tables/search?guests=${guests}&date=${date}&time=${time}&zone=${zone}`)
+    .then(res => res.json())
+    .then(availableTables => {
+        // Скидаємо підсвітку всіх столів
+        document.querySelectorAll('.table-item').forEach(t => t.style.border = "none");
+        
+        // Підсвічуємо рекомендовані столи (зеленим)
+        availableTables.forEach(table => {
+            const tableElement = document.querySelector(`[data-id="${table.id}"]`);
+            if (tableElement) tableElement.style.border = "3px solid #2ecc71";
+        });
+    });
+}
