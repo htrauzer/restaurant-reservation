@@ -1,45 +1,36 @@
 let selectedHour = null;
 
 /**
- * Handle time selection from the left timetable
- * @param {HTMLElement} element - The clicked DOM element
- * @param {number} hour - The hour value (12-23)
- */
+
+ * @param {HTMLElement} element 
+ * @param {number} hour 
+    */
+
 function selectTime(element, hour) {
-    // English comment: UI feedback for selection
+    // 1. Visual selection in Timetable
     document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('active'));
     element.classList.add('active');
     
-    selectedHour = hour;
-    
-    // English comment: After selecting time, update table statuses
-    updateTableStatuses();
-}
+    // 2. Fetch occupied tables from server
+    fetch(`/api/reservations/occupied?hour=${hour}`)
+    .then(response => response.json())
+    .then(occupiedTableIds => {
+        // 3. Update every table color
+        const allTables = document.querySelectorAll('.table-item');
+        
+        allTables.forEach(tableDiv => {
+            const tableId = parseInt(tableDiv.getAttribute('data-id'));
+            
+            // First, reset to green (available)
+            tableDiv.style.backgroundColor = "#2ecc71"; // Green
+            tableDiv.classList.remove('status-reserved');
+            tableDiv.style.pointerEvents = "auto"; // Enable clicking
 
-/**
- * Main filter logic
- */
-function updateTableStatuses() {
-    if (!selectedHour) return;
-
-    const guests = document.getElementById('guestCount').value;
-    const zone = document.querySelector('input[name="zone"]:checked').value;
-
-    fetch(`/api/tables/search?guests=${guests}&zone=${zone}&time=${selectedHour}`)
-    .then(res => res.json())
-    .then(recommended => {
-        // English comment: Set all tables to GREEN (available) by default when time is picked
-        document.querySelectorAll('.table-item').forEach(t => {
-            t.style.backgroundColor = "#2ecc71"; // Green
-            t.style.boxShadow = "none";
-        });
-
-        // English comment: Highlight recommended ones in YELLOW
-        recommended.forEach(table => {
-            const el = document.querySelector(`[data-id="${table.id}"]`);
-            if (el) {
-                el.style.backgroundColor = "#f1c40f"; // Yellow
-                el.style.boxShadow = "0 0 15px #f1c40f";
+            // If table ID is in the "busy" list from server, make it gray
+            if (occupiedTableIds.includes(tableId)) {
+                tableDiv.style.backgroundColor = "#95a5a6"; // Gray
+                tableDiv.classList.add('status-reserved');
+                tableDiv.style.pointerEvents = "none"; // Disable clicking
             }
         });
     });

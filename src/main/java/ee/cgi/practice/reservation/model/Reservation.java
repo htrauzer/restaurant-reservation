@@ -8,34 +8,34 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Entity
-@Data
-@NoArgsConstructor // Lombok will create a no-args constructor for JPA
+@Table(name = "reservations")
+@Data 
 public class Reservation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne 
+    @ManyToOne
     @JoinColumn(name = "table_id")
-    private RestaurantTable restaurantTable;
+    private RestaurantTable restaurantTable; 
 
-    private String clientName;
-    private int numberOfGuests;
-    
+    private String customerName;
     private LocalDateTime startTime;
-    private LocalDateTime endTime; // Always startTime + 2 hours
+    private LocalDateTime endTime;
+    private int numberOfGuests;
 
-    // Constructor for convenient creation of reservations in the service
-    public Reservation(RestaurantTable table, LocalDateTime start, int guests, String name) {
-        this.restaurantTable = table;
-        this.startTime = start;
-        this.endTime = start.plusHours(2); // (2 hours)
-        this.numberOfGuests = guests;
-        this.clientName = name;
+    public Reservation() {}
+
+    public Reservation(RestaurantTable restaurantTable, LocalDateTime startTime, int numberOfGuests, String customerName) {
+        this.restaurantTable = restaurantTable;
+        this.startTime = startTime;
+        this.numberOfGuests = numberOfGuests;
+        this.customerName = customerName;
+        this.endTime = startTime.plusHours(2);
     }
 }
