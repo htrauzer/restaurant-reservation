@@ -2,7 +2,8 @@ package ee.cgi.practice.reservation.model;
 
 import java.util.Set;
 
-import jakarta.persistence.CollectionTable;
+import jakarta.persistence.CollectionTable; // Using wildcard for all JPA annotations
+import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -16,7 +17,7 @@ import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity 
-@Table(name = "restaurant_tables") // Mapping to "restaurant_tables" table in DB
+@Table(name = "restaurant_tables")
 @Data
 public class RestaurantTable {
 
@@ -29,18 +30,23 @@ public class RestaurantTable {
     @Enumerated(EnumType.STRING)
     private Zone zone; 
 
+    // FIXED: Corrected the join column name and removed the extra string wrapper
     @ElementCollection(targetClass = TableFeature.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "table_features", joinColumns = @JoinColumn(name = "table_id"))
     private Set<TableFeature> features; 
 
+    // Explicitly mapping Java fields to SQL column names for import.sql compatibility
+    @Column(name = "pos_x")
     private int posX;
+
+    @Column(name = "pos_y")
     private int posY;
 
     // Empty constructor (needed for Hibernate)
     public RestaurantTable() {}
 
-    // Constructor for DataInitializer
+    // Constructor for manual creation
     public RestaurantTable(int capacity, Zone zone, Set<TableFeature> features, int x, int y) {
         this.capacity = capacity;
         this.zone = zone;

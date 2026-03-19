@@ -1,9 +1,12 @@
 package ee.cgi.practice.reservation.controller;
 
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import ee.cgi.practice.reservation.model.RestaurantTable;
 import ee.cgi.practice.reservation.repository.TableRepository;
 import ee.cgi.practice.reservation.service.MealService;
 
@@ -18,9 +21,11 @@ public class RestaurantController {
         this.mealService = mealService;
     }
 
-    @GetMapping("/")
+   @GetMapping("/")
     public String showMap(Model model) {
-        model.addAttribute("tables", tableRepository.findAll());
+        List<RestaurantTable> allTables = tableRepository.findAll();
+        System.out.println("DEBUG: Tables count in DB = " + allTables.size()); // Add this line
+        model.addAttribute("tables", allTables);
         model.addAttribute("specialMeal", mealService.getMealOfTheDay());
         return "index";
     }

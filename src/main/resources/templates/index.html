@@ -1,23 +1,21 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Restaurant Reservation</title>
+    <meta charset="UTF-8">
+    <title>Restaurant Layout & Booking</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
     <header>
-        <h1>Restaurant Layout</h1>
-        <div class="meal-promo">
-            <p th:text="${specialMeal}">Loading today's special...</p>
-        </div>
+        <h1>Restaurant Management System</h1>
     </header>
 
     <div class="filter-panel">
-        <input type="number" id="guestCount" placeholder="Amount of Guests" min="1" value="2">
+        <input type="number" id="guestCount" placeholder="Guests" min="1" value="2">
         <select id="zoneSelect">
             <option value="MAIN_HALL">Main Hall</option>
-            <option value="TERRACE">Terrace</option>
             <option value="PRIVATE_ROOMS">Private Rooms</option>
+            <option value="TERRACE">Terrace</option>
         </select>
         <input type="date" id="bookingDate" value="2026-03-19">
         <select id="bookingTime">
@@ -26,43 +24,41 @@
             <option value="18">18:00</option>
             <option value="20">20:00</option>
         </select>
-        <button onclick="filterTables()">Find Available Tables</button>
+        <button onclick="filterTables()">Find Available</button>
     </div>
 
     <div class="restaurant-container">
-        <div class="zone-section main-hall">
-            <h2>Main Hall</h2>
-            <div class="wall"></div>
+        <div class="zones-sidebar">
+            <div class="zone-box"><h2>Main Hall</h2></div>
+            <div class="zone-box"><h2>Private Rooms</h2></div>
+            <div class="zone-box"><h2>Terrace</h2></div>
         </div>
 
-        <div class="zone-section private-rooms">
-            <h2>Private Rooms</h2>
-            <div class="wall"></div>
-        </div>
-
-        <div class="zone-section terrace">
-            <h2>Terrace</h2>
+        <div class="service-area">
+            <div class="kitchen-decor">KITCHEN / BAR</div>
         </div>
 
         <div th:each="table : ${tables}" 
-            class="table-item" 
-            th:classappend="${table.zone}"
-            th:style="'left:' + ${table.posX} + 'px; top:' + ${table.posY} + 'px;'"
-            th:data-id="${table.id}">
+             class="table-item" 
+             th:classappend="|${table.zone} ${ (table.capacity == 2 || table.zone.name() == 'TERRACE') ? 'shape-round' : 'shape-square' }|"
+             th:style="'left:' + ${table.posX} + '%; top:' + ${table.posY} + '%;'"
+             th:data-id="${table.id}"
+             onclick="openBooking(this)">
             <span th:text="${table.capacity}"></span>
         </div>
     </div>
 
-    <div class="legend">
-        <span class="hall">Main Hall</span>
-        <span class="private">Private Rooms</span>
-        <span class="terrace">Terrace</span>
+    <div id="bookingModal" class="modal">
+        <div class="modal-body">
+            <h3>Book Table #<span id="modalId"></span></h3>
+            <input type="text" id="userName" placeholder="Your Name">
+            <div class="modal-btns">
+                <button onclick="confirmBooking()">Book</button>
+                <button onclick="closeModal()">Exit</button>
+            </div>
+        </div>
     </div>
-    <div id="bookingModal" style="display:none; position:fixed; top:30%; left:40%; background:white; padding:20px; border:2px solid black; z-index:100;">
-        <h3>Booking Table #<span id="modalTableId"></span></h3>
-        <input type="text" id="customerName" placeholder="Your Name">
-        <button onclick="submitBooking()">Confirm</button>
-        <button onclick="document.getElementById('bookingModal').style.display='none'">Cancel</button>
-    </div>
+
+   <script th:src="@{/js/script.js}"></script>
 </body>
 </html>
