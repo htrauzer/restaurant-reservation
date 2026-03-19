@@ -24,15 +24,12 @@ public class ReservationController {
     }
 
     @PostMapping("/book")
-    public String bookTable(@RequestParam Long tableId, @RequestParam String name) {
-        return tableRepository.findById(tableId).map(table -> {
-            Reservation res = new Reservation();
-            res.setRestaurantTable(table);
-            res.setCustomerName(name);
-            res.setStartTime(LocalDateTime.now());
-            res.setEndTime(LocalDateTime.now().plusHours(2)); // 2 hours reservation
-            reservationRepository.save(res);
-            return "Table " + tableId + " booked for " + name;
-        }).orElse("Error: Table not found");
-    }
+public String bookTable(@RequestParam Long tableId, @RequestParam String name, @RequestParam int guests) {
+    return tableRepository.findById(tableId).map(table -> {
+        // Using your new constructor, which automatically calculates endTime
+        Reservation res = new Reservation(table, LocalDateTime.now(), guests, name);
+        reservationRepository.save(res);
+        return "Table " + tableId + " booked for " + name;
+    }).orElse("Error: Table not found");
+}
 }
