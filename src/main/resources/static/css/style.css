@@ -1,112 +1,42 @@
-.main-dashboard {
-    display: flex;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 40px; /* Space between the zones and the time bar */
-    padding: 20px;
-}
-
-.floor-plan-container {
-    display: flex;
-    flex-direction: column; /* This stacks them vertically */
-    align-items: center;    /* This centers the zones horizontally */
-    gap: 20px;
-    padding: 20px;
-}
-
-.zone-box {
+#restaurant-map {
     position: relative;
+    width: 800px;
+    height: 600px;
+    background: #f4f1ea;
     border: 2px solid #333;
-    width: 400px; /* Wider to accommodate side-by-side tables */
-    height: 200px; /* Adjust height as needed */
-    background-color: #f9f9f9;
-    margin-bottom: 20px;
-    overflow: hidden; /* Keeps tables from "bleeding" out of the box */
+    margin: 20px auto;
 }
 
-.table-div {
+.table-item {
     position: absolute;
-    width: 45px;               /* Width of the square */
-    height: 45px;              /* Height of the square */
-    background-color: #3498db; /* A nice professional Blue */
-    color: white;              /* White text for the seat numbers */
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 4px;        /* Slightly rounded corners */
-    font-weight: bold;
-    box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
-    transition: all 0.3s ease; /* Smooth color changes */
-}
-
-/* Optional: Add a hover effect so you know it's interactive */
-.table-div:hover {
-    transform: scale(1.05);
-    filter: brightness(1.1);
-}
-
-.vertical-time-bar {
-    width: 150px;
-    position: sticky; /* Keeps it visible while scrolling */
-    top: 20px;
-    background: #2c3e50;
-    padding: 15px;
-    border-radius: 10px;
-}
-
-.time-buttons-stack {
-    display: flex;
-    flex-direction: column; /* Stacks buttons vertically */
-    gap: 8px;
-}
-
-.hour-btn {
-    padding: 12px;
-    border: none;
-    background: #34495e;
     color: white;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: all 0.2s;
-}
-
-.hour-btn:hover {
-    background: #1abc9c;   /* Teal hover effect */
-}
-
-.hour-btn.active {
-    background: #27ae60;   /* Green when selected */
     font-weight: bold;
-    box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
+    cursor: pointer;
+    transition: transform 0.2s;
 }
 
-.seat-selection-box {
-    display: flex;
-    flex-wrap: wrap; /* Wraps if screen is narrow */
-    gap: 8px;
+.table-item:hover { transform: scale(1.2); }
+
+/* Кольори для зон (Вимога №1) */
+.main_hall { background-color: #3498db; }
+.private_rooms { background-color: #e74c3c; }
+.terrace { background-color: #2ecc71; }
+
+.meal-promo {
+    text-align: center;
     padding: 10px;
-    background: #f8f9fa;
-    border-radius: 8px;
+    background: #fff3cd;
+    border: 1px solid #ffeeba;
 }
 
-.seat-btn {
-    cursor: pointer;
-}
-
-/* Hide the actual radio button but style the span */
-.seat-btn input { display: none; }
-
-.seat-btn span {
-    display: inline-block;
-    padding: 8px 12px;
-    background-color: #3498db; /* Blue */
-    color: white;
-    border-radius: 4px;
-    transition: background 0.3s;
-}
-
-/* Highlight effect when selected */
-.seat-btn input:checked + span {
-    background-color: #2980b9; /* Darker Blue */
-    border: 2px solid #1c2833;
+.booked {
+    background-color: #95a5a6 !important; /* Сірий або червоний для зайнятих */
+    cursor: not-allowed;
+    opacity: 0.6;
 }

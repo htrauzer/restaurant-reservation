@@ -1,8 +1,14 @@
 package ee.cgi.practice.reservation.model;
 
-import jakarta.persistence.*;
-import lombok.Data;
 import java.time.LocalDateTime;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import lombok.Data;
 
 @Entity
 @Data
@@ -12,10 +18,11 @@ public class Reservation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne // Багато бронювань можуть посилатися на один стіл у різний час
+    @ManyToOne 
     @JoinColumn(name = "table_id")
     private RestaurantTable restaurantTable;
 
+    private String customerName;
     private LocalDateTime startTime;
     private LocalDateTime endTime; // Має бути startTime + 2 години
     
