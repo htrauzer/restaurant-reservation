@@ -29,13 +29,26 @@
         <button onclick="filterTables()">Find Available Tables</button>
     </div>
 
-    <div id="restaurant-map">
+    <div class="restaurant-container">
+        <div class="zone-section main-hall">
+            <h2>Main Hall</h2>
+            <div class="wall"></div>
+        </div>
+
+        <div class="zone-section private-rooms">
+            <h2>Private Rooms</h2>
+            <div class="wall"></div>
+        </div>
+
+        <div class="zone-section terrace">
+            <h2>Terrace</h2>
+        </div>
+
         <div th:each="table : ${tables}" 
-             class="table-item" 
-             th:classappend="${table.zone.toString().toLowerCase()}"
-             th:style="'left: ' + ${table.posX} + 'px; top: ' + ${table.posY} + 'px;'"
-             th:title="'Seats: ' + ${table.capacity} + ' | Zone: ' + ${table.zone}">
-            
+            class="table-item" 
+            th:classappend="${table.zone}"
+            th:style="'left:' + ${table.posX} + 'px; top:' + ${table.posY} + 'px;'"
+            th:data-id="${table.id}">
             <span th:text="${table.capacity}"></span>
         </div>
     </div>
