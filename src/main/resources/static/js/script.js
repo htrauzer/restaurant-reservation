@@ -1,27 +1,27 @@
-// Функція, що викликається, коли користувач відпускає стіл
+// Function, that is called when the user releases a table
 function updateTableOnServer(tableId, newX, newY) {
     fetch(`/api/admin/tables/${tableId}/position?x=${newX}&y=${newY}`, {
         method: 'PATCH'
     })
     .then(response => {
         if (response.ok) {
-            console.log("Позицію стола збережено!");
+            console.log("Position of the table saved!");
         }
     });
 }
 
-// Приклад обробки події перетягування (Drag End)
+// Example of handling drag end event
 document.querySelectorAll('.table-icon').forEach(table => {
     table.addEventListener('dragend', (e) => {
         const id = table.dataset.id;
         const x = e.clientX;
         const y = e.clientY;
         
-        // Візуально переміщуємо
+        // Visual movement
         table.style.left = x + 'px';
         table.style.top = y + 'px';
         
-        // Відправляємо на сервер
+        // Send to server
         updateTableOnServer(id, x, y);
     });
 });

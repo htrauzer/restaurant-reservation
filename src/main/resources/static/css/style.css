@@ -23,7 +23,7 @@
 
 .table-item:hover { transform: scale(1.2); }
 
-/* Кольори для зон (Вимога №1) */
+/* Colors for zones */
 .main_hall { background-color: #3498db; }
 .private_rooms { background-color: #e74c3c; }
 .terrace { background-color: #2ecc71; }
@@ -36,7 +36,7 @@
 }
 
 .booked {
-    background-color: #95a5a6 !important; /* Сірий або червоний для зайнятих */
+    background-color: #95a5a6 !important; 
     cursor: not-allowed;
     opacity: 0.6;
 }

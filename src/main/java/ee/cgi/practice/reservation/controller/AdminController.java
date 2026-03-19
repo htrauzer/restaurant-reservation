@@ -19,7 +19,7 @@ public class AdminController {
         this.tableRepository = tableRepository;
     }
 
-    // Оновлення позиції стола (Вимога №7)
+    // Table update endpoint for admin to change table position
     @PatchMapping("/tables/{id}/position")
     public ResponseEntity<?> updateTablePosition(
             @PathVariable Long id, 

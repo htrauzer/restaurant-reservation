@@ -18,21 +18,21 @@ class RecommendationServiceTest {
 
     @Test
     void shouldRecommendTableWithHighestPoints() {
-        // 1. Готуємо фальшиві дані (Mocks)
+        // 1. Prepare Mocks
         TableRepository repository = Mockito.mock(TableRepository.class);
         RecommendationService service = new RecommendationService(repository);
 
-        // Стіл №1: Ідеально підходить (Тераса, Вікно)
+        // Table #1: Perfect match (Terrace, Window)
         RestaurantTable table1 = new RestaurantTable(2, Zone.TERRACE, Set.of(TableFeature.WINDOW), 0, 0);
-        // Стіл №2: Не та зона, немає преференцій
+        // Table #2: Wrong zone, no preferences
         RestaurantTable table2 = new RestaurantTable(2, Zone.MAIN_HALL, Set.of(), 100, 100);
 
         when(repository.findAll()).thenReturn(List.of(table1, table2));
 
-        // 2. Виконуємо дію: клієнт хоче 2 місця на Терасі біля Вікна
+        // 2. Execute action: client wants 2 seats on the Terrace near the Window
         RestaurantTable result = service.recommendTable(2, Zone.TERRACE, Set.of(TableFeature.WINDOW));
 
-        // 3. Перевірка: система має обрати Стіл №1
+        // 3. Verify: system should choose Table #1
         assertEquals(Zone.TERRACE, result.getZone());
         assertEquals(table1, result);
     }

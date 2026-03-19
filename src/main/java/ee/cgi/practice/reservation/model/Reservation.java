@@ -24,7 +24,7 @@ public class Reservation {
 
     private String customerName;
     private LocalDateTime startTime;
-    private LocalDateTime endTime; // Має бути startTime + 2 години
+    private LocalDateTime endTime; // Has to be startTime + 2 hours
     
     private int numberOfGuests;
     private String clientName;
@@ -34,7 +34,7 @@ public class Reservation {
     public Reservation(RestaurantTable table, LocalDateTime start, int guests, String name) {
         this.restaurantTable = table;
         this.startTime = start;
-        this.endTime = start.plusHours(2); // Автоматично встановлюємо 2 години
+        this.endTime = start.plusHours(2); // Automatically set to 2 hours
         this.numberOfGuests = guests;
         this.clientName = name;
     }

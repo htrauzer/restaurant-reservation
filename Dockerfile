@@ -1,10 +1,10 @@
-# Крок 1: Збірка (Maven з Java 21)
+# Step 1: Build (Maven with Java 21)
 FROM maven:3.9.6-eclipse-temurin-21 AS build
 WORKDIR /app
 COPY . .
 RUN mvn clean package -DskipTests
 
-# Крок 2: Запуск (JRE 21)
+# Step 2: Run (JRE 21)
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar

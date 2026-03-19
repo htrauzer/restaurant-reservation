@@ -22,7 +22,7 @@ public class ReservationService {
     }
 
     public List<RestaurantTable> findTablesForGroup(int guests, Zone zone) {
-        // 1. Спочатку шукаємо один стіл, який вміщує всіх
+        // 1. First, try to find a single table that can accommodate the group
         Optional<RestaurantTable> singleTable = tableRepository.findAll().stream()
                 .filter(t -> t.getZone() == zone)
                 .filter(t -> t.getCapacity() >= guests)
@@ -32,7 +32,7 @@ public class ReservationService {
             return Collections.singletonList(singleTable.get());
         }
 
-        // 2. Якщо одного стола мало, шукаємо пару сусідніх столів (Вимога №6)
+        // 2. If one table is not enough, look for a pair of adjacent tables
         return findCombinedTables(guests, zone);
     }
 
@@ -45,14 +45,14 @@ public class ReservationService {
                 RestaurantTable t2 = tablesInZone.get(j);
 
                 if (t1.getCapacity() + t2.getCapacity() >= guests) {
-                    // Перевіряємо, чи вони "сусіди" (відстань менше 150 одиниць)
+                    // Check if they are "adjacent" (distance less than 150 units)
                     if (calculateDistance(t1, t2) < 150) { 
                         return Arrays.asList(t1, t2);
                     }
                 }
             }
         }
-        return Collections.emptyList(); // Жодна комбінація не підійшла
+        return Collections.emptyList(); // No combination fits
     }
 
     private double calculateDistance(RestaurantTable t1, RestaurantTable t2) {

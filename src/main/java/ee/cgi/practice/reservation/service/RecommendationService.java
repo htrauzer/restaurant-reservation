@@ -23,26 +23,26 @@ public class RecommendationService {
         List<RestaurantTable> allTables = tableRepository.findAll();
 
         return allTables.stream()
-            // Крок 1: Відсіяти занадто малі столи
+            // Step 1: Filter tables that cannot accommodate the number of guests
             .filter(t -> t.getCapacity() >= guests)
-            // Крок 2: Нарахувати бали
+            // Step 2: Calculate points
             .sorted((t1, t2) -> Integer.compare(calculatePoints(t2, guests, preferredZone, prefs), 
                                                calculatePoints(t1, guests, preferredZone, prefs)))
             .findFirst()
-            .orElse(null); // Якщо нічого не підходить
+            .orElse(null); // If nothing fits
     }
 
     private int calculatePoints(RestaurantTable table, int guests, Zone zone, Set<TableFeature> prefs) {
         int points = 0;
 
-        // +20 балів за правильну зону
+        // +20 points for the correct zone
         if (table.getZone() == zone) points += 20;
 
-        // +10 балів, якщо стіл ідеально підходить за розміром (не марнуємо місця)
+        // +10 points if the table fits perfectly in terms of size (no space wasted)
         if (table.getCapacity() == guests) points += 10;
         else if (table.getCapacity() == guests + 1) points += 5;
 
-        // +5 балів за кожну збіжну преференцію (Window, Sofa тощо)
+        // +5 points for each matching preference (Window, Sofa, etc.)
         for (TableFeature pref : prefs) {
             if (table.getFeatures().contains(pref)) {
                 points += 5;

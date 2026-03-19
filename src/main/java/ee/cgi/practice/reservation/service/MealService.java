@@ -1,9 +1,10 @@
 package ee.cgi.practice.reservation.service;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import java.util.Map;
-import java.util.List;
 
 @Service
 public class MealService {
@@ -17,20 +18,20 @@ public class MealService {
 
     public String getMealOfTheDay() {
         try {
-            // Отримуємо відповідь від API
+            // Get API response
             Map<String, Object> response = restTemplate.getForObject(API_URL, Map.class);
             
-            // TheMealDB повертає структуру { "meals": [ { "strMeal": "Name", ... } ] }
+            // TheMealDB returns a structure { "meals": [ { "strMeal": "Name", ... } ] }
             List<Map<String, Object>> meals = (List<Map<String, Object>>) response.get("meals");
             
             if (meals != null && !meals.get(0).isEmpty()) {
                 String mealName = (String) meals.get(0).get("strMeal");
                 String mealThumb = (String) meals.get(0).get("strMealThumb");
-                return "Рекомендуємо сьогодні: " + mealName;
+                return "Recommending today: " + mealName;
             }
         } catch (Exception e) {
-            return "Смачного відпочинку у нашому ресторані!"; // Fallback, якщо API не відповідає
+            return "Enjoy your meal at our restaurant!"; // Fallback, if API doesn't respond
         }
-        return "Сьогодні особливий день!";
+        return "Today is a special day!";
     }
 }

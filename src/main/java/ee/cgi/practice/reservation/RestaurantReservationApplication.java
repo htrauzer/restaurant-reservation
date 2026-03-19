@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
-@EnableScheduling // Це дозволить нам використовувати @Scheduled для автоматичного звільнення столів
+@EnableScheduling // This will allow us to use @Scheduled for automatic table release
 public class RestaurantReservationApplication {
 
     public static void main(String[] args) {

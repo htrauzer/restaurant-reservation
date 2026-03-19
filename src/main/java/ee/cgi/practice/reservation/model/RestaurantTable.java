@@ -16,7 +16,7 @@ import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity 
-@Table(name = "restaurant_tables") // Явно вказуємо назву для БД
+@Table(name = "restaurant_tables") // Mapping to "restaurant_tables" table in DB
 @Data
 public class RestaurantTable {
 
@@ -37,10 +37,10 @@ public class RestaurantTable {
     private int posX;
     private int posY;
 
-    // Порожній конструктор (потрібен для Hibernate)
+    // Empty constructor (needed for Hibernate)
     public RestaurantTable() {}
 
-    // Конструктор для DataInitializer
+    // Constructor for DataInitializer
     public RestaurantTable(int capacity, Zone zone, Set<TableFeature> features, int x, int y) {
         this.capacity = capacity;
         this.zone = zone;
