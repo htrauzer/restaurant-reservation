@@ -17,71 +17,88 @@
     </header>
 
     <div class="app-layout">
-        <aside class="timetable-column">
-            <div class="gray-box">
-                <h3>Timetable</h3>
-                <div class="time-grid">
-                    <div th:each="hour : ${#numbers.sequence(12, 23)}" 
-                         class="time-slot" 
-                         th:text="${hour} + ':00'"
-                         th:onclick="'selectTime(this, ' + ${hour} + ')'">
+            <aside class="timetable-column">
+                <div class="gray-box">
+                    <h3>Timetable</h3>
+                    <div class="time-grid">
+                        <div th:each="hour : ${#numbers.sequence(12, 23)}" 
+                            class="time-slot" 
+                            th:text="${hour} + ':00'"
+                            th:onclick="'selectTime(this, ' + ${hour} + ')'">
+                        </div>
                     </div>
                 </div>
-            </div>
-        </aside>
-    <main class="restaurant-column">
-        <div class="restaurant-layout">
-    
-            <div class="zone main-hall">
-                <h2>Main Hall</h2>
-            </div>
-            <div class="zone private-rooms">
-                <h2>Private Rooms</h2>
-            </div>
-            <div class="zone terrace">
-                <h2>Terrace</h2>
-            </div>
+            </aside>
+        <main class="restaurant-column">
+            <div class="restaurant-layout">
+        
+                <div class="zone main-hall">
+                    <h2>Main Hall</h2>
+                </div>
+                <div class="zone private-rooms">
+                    <h2>Private Rooms</h2>
+                </div>
+                <div class="zone terrace">
+                    <h2>Terrace</h2>
+                </div>
 
-            <div th:each="table : ${tables}" 
-                class="table-item" 
-                th:classappend="${ (table.capacity == 2 || table.zone.name() == 'TERRACE') ? 'shape-round' : 'shape-square' }"
-                th:style="'left:' + ${table.posX} + '%; top:' + ${table.posY} + '%;'"
-                th:data-id="${table.id}">
-                <span th:text="${table.capacity}"></span>
+                <div th:each="table : ${tables}" 
+                    class="table-item" 
+                    th:classappend="${ (table.capacity == 2 || table.zone.name() == 'TERRACE') ? 'shape-round' : 'shape-square' }"
+                    th:style="'left:' + ${table.posX} + '%; top:' + ${table.posY} + '%;'"
+                    th:data-id="${table.id}">
+                    <span th:text="${table.capacity}"></span>
+                </div>
+            </div>
+        </main>
+            <aside class="parameters-column">
+                <div class="parameter-box">
+                    <h3>Filters</h3>
+                    <h4>If group of people are bigger then 8, please use button "Search Tables"</h4>
+                    
+                    <div class="param-group">
+                        <label>Guests:</label>
+                        <input type="number" id="guestCount" min="1" value="2">
+                    </div>
+
+                    <div class="param-group">
+                        <label>Preferences:</label>
+                        <div class="checkbox-list">
+                            <label><input type="checkbox" name="feature" value="WINDOW"> Window</label>
+                            <label><input type="checkbox" name="feature" value="CORNER"> Corner</label>
+                            <label><input type="checkbox" name="feature" value="SOFA"> Sofa</label>
+                        </div>
+                    </div>
+
+                    <div class="param-group">
+                        <label>Zone:</label>
+                        <div class="radio-list">
+                            <label><input type="radio" name="zone" value="MAIN_HALL"> Main Hall</label>
+                            <label><input type="radio" name="zone" value="PRIVATE_ROOMS"> Private Room</label>
+                            <label><input type="radio" name="zone" value="TERRACE"> Terrace</label>
+                        </div>
+                    </div>
+
+                    <button class="search-btn" onclick="filterTables()">Search Tables</button>
+                    <div class="admin-sidebar-access">
+                        <button onclick="openAdminModal()" class="btn-admin-sidebar">Administrator Login</button>
+                    </div>
+                </div>
+            </aside>
+        <div id="adminLoginModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <h3>Admin Access</h3>
+                <div id="adminLoginStatus" style="color: red; margin-bottom: 10px;"></div>
+                
+                <input type="text" id="adminUser" placeholder="Username">
+                <input type="password" id="adminPass" placeholder="Password">
+                
+                <div class="modal-buttons">
+                    <button type="button" onclick="closeAdminModal()" class="btn-secondary">Cancel</button>
+                    <button type="button" onclick="processAdminLogin()" class="btn-primary">Confirm</button>
+                </div>
             </div>
         </div>
-    </main>
-        <aside class="parameters-column">
-            <div class="parameter-box">
-                <h3>Filters</h3>
-                <h4>If group of people are bigger then 8, please use button "Search Tables"</h4>
-                
-                <div class="param-group">
-                    <label>Guests:</label>
-                    <input type="number" id="guestCount" min="1" value="2">
-                </div>
-
-                <div class="param-group">
-                    <label>Preferences:</label>
-                    <div class="checkbox-list">
-                        <label><input type="checkbox" name="feature" value="WINDOW"> Window</label>
-                        <label><input type="checkbox" name="feature" value="CORNER"> Corner</label>
-                        <label><input type="checkbox" name="feature" value="SOFA"> Sofa</label>
-                    </div>
-                </div>
-
-                <div class="param-group">
-                    <label>Zone:</label>
-                    <div class="radio-list">
-                        <label><input type="radio" name="zone" value="MAIN_HALL"> Main Hall</label>
-                        <label><input type="radio" name="zone" value="PRIVATE_ROOMS"> Private Room</label>
-                        <label><input type="radio" name="zone" value="TERRACE"> Terrace</label>
-                    </div>
-                </div>
-
-                <button class="search-btn" onclick="filterTables()">Search Tables</button>
-            </div>
-        </aside>
     </div>
 
     <div id="bookingModal" class="modal" style="display: none;">
@@ -96,7 +113,7 @@
             </div>
         </div>
     </div>
-
     <script type="module" src="js/main.js"></script>
+    <script type="module" src="js/admin-logic.js"></script>
 </body>
 </html>
