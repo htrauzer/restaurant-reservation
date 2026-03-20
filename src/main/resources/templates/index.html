@@ -51,6 +51,7 @@
         <aside class="parameters-column">
             <div class="parameter-box">
                 <h3>Filters</h3>
+                <h4>If group of people are bigger then 8, please use button "Search Tables"</h4>
                 
                 <div class="param-group">
                     <label>Guests:</label>
@@ -80,13 +81,15 @@
         </aside>
     </div>
 
-    <div id="bookingModal" class="modal">
+    <div id="bookingModal" class="modal" style="display: none;">
+        <div id="bookingStatus" style="color: red; margin-bottom: 10px;"></div>
         <div class="modal-content">
-            <h3>Book Table #<span id="modalTableId"></span></h3>
-            <input type="text" id="customerName" placeholder="Customer Name">
-            <div class="modal-btns">
-                <button class="confirm-btn" onclick="submitBooking()">Book Now</button>
-                <button class="cancel-btn" onclick="closeModal()">Close</button>
+            <h3>Confirm Reservation</h3>
+            <p id="modalDetails"></p>
+            <input type="text" id="customerName" placeholder="Enter your name" required>
+            <div class="modal-buttons">
+                <button onclick="closeModal()" class="btn-secondary">Cancel</button>
+                <button onclick="confirmBooking()">Book Selected Table</button>  
             </div>
         </div>
     </div>

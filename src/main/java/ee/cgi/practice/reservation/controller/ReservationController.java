@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +20,7 @@ import ee.cgi.practice.reservation.model.TableFeature;
 import ee.cgi.practice.reservation.model.Zone;
 import ee.cgi.practice.reservation.repository.ReservationRepository;
 import ee.cgi.practice.reservation.repository.TableRepository;
+import ee.cgi.practice.reservation.service.BookingService;
 import ee.cgi.practice.reservation.service.RecommendationService;
 import ee.cgi.practice.reservation.service.ReservationService;
 
@@ -30,29 +32,30 @@ public class ReservationController {
     private final TableRepository tableRepository;
     private final RecommendationService recommendationService;
     private final ReservationService reservationService;
+    // 1. ДОДАНО ПОЛЕ ДЛЯ СЕРВІСУ
+    private final BookingService bookingService;
 
+    // 2. ОНОВЛЕНО КОНСТРУКТОР (додано BookingService)
     public ReservationController(ReservationRepository reservationRepository, 
                                  TableRepository tableRepository, 
                                  RecommendationService recommendationService,
-                                 ReservationService reservationService) {
+                                 ReservationService reservationService,
+                                 BookingService bookingService) {
         this.reservationRepository = reservationRepository;
         this.tableRepository = tableRepository;
         this.recommendationService = recommendationService;
         this.reservationService = reservationService;
+        this.bookingService = bookingService;
     }
 
     /**
      * 1. Розумний пошук (ReservationService)
-     * Використовується при натисканні на кнопку "Search". 
-     * Може повернути один стіл або пару сусідніх.
      */
     @GetMapping("/find-available")
     public List<Long> findAvailable(@RequestParam int hour, 
                                     @RequestParam int guests, 
                                     @RequestParam Zone zone) {
         LocalDateTime requestedStart = LocalDateTime.of(LocalDate.now(), LocalTime.of(hour, 0));
-        
-        // Використовує логіку findAvailableTables з вашого файлу
         List<RestaurantTable> tables = reservationService.findAvailableTables(guests, zone, requestedStart);
         
         return tables.stream()
@@ -62,8 +65,6 @@ public class ReservationController {
 
     /**
      * 2. Рекомендація найкращого варіанту (RecommendationService)
-     * Викликається автоматично при кліку на час. 
-     * Повертає ОДИН найкращий вільний стіл на основі балів.
      */
     @GetMapping("/recommend")
     public List<Long> getRecommendations(
@@ -72,7 +73,6 @@ public class ReservationController {
             @RequestParam(required = false) Zone zone,
             @RequestParam(required = false) Set<TableFeature> features) {
         
-        // Викликає логіку з набраними балами (зона +20, розмір +10 і т.д.)
         return recommendationService.recommendTables(hour, guests, zone, features).stream()
                 .map(RestaurantTable::getId)
                 .collect(Collectors.toList());
@@ -95,15 +95,17 @@ public class ReservationController {
      * 4. Збереження нового бронювання
      */
     @PostMapping("/book")
-    public String bookTable(@RequestParam Long tableId, 
-                            @RequestParam String name, 
-                            @RequestParam int guests,
-                            @RequestParam int hour) {
-        return tableRepository.findById(tableId).map(table -> {
+    public ResponseEntity<?> bookTable(@RequestParam String name, 
+                                    @RequestParam int guests, 
+                                    @RequestParam int hour,
+                                    @RequestParam List<Long> tableIds) {
+        try {
             LocalDateTime start = LocalDateTime.of(LocalDate.now(), LocalTime.of(hour, 0));
-            Reservation res = new Reservation(table, start, guests, name);
-            reservationRepository.save(res);
-            return "Table " + tableId + " successfully booked for " + name;
-        }).orElse("Error: Table not found");
+            // Тепер змінна bookingService доступна
+            List<Reservation> result = bookingService.createBooking(name, guests, tableIds, start);
+            return ResponseEntity.ok("Reserved " + result.size() + " table(s) for " + name);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }
