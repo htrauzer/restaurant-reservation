@@ -1,28 +1,13 @@
 import { ReservationAPI } from './api.js';
 
-export async function initAdminMap() {
-
-    if (sessionStorage.getItem('isAdmin') !== 'true') {
-        alert("Access Denied. Please log in.");
-        window.location.href = 'index.html'; 
-        return;
-    }
-}
-
 window.openAdminModal = () => {
     const modal = document.getElementById('adminLoginModal');
-    const status = document.getElementById('adminLoginStatus');
     if (modal) modal.style.display = 'flex';
-    if (status) status.innerText = "";
 };
 
 window.closeAdminModal = () => {
     const modal = document.getElementById('adminLoginModal');
-    if (modal) {
-        modal.style.display = 'none';
-        document.getElementById('adminUser').value = "";
-        document.getElementById('adminPass').value = "";
-    }
+    if (modal) modal.style.display = 'none';
 };
 
 window.processAdminLogin = () => {
@@ -32,35 +17,56 @@ window.processAdminLogin = () => {
 
     if (user === 'admin' && pass === '1234') {
         sessionStorage.setItem('isAdmin', 'true');
-        window.location.href = 'admin.html'; 
+        window.location.href = '/admin'; 
     } else {
         if (status) {
             status.innerText = "Invalid username or password";
-            setTimeout(() => { 
-                status.innerText = ""; 
-            }, 3000);
+            setTimeout(() => { if(status) status.innerText = ""; }, 3000);
         }
     }
 };
 
-
-// --- Logic of Drag-and-Drop for admin.html ---
-
 export async function initAdminMap() {
-    // Перевірка прав доступу
-    if (sessionStorage.getItem('isAdmin') !== 'true') {
-        window.location.href = 'index.html';
-        return;
-    }
-
     const map = document.getElementById('admin-map');
     if (!map) return;
 
-    // Тут залишається ваш код завантаження столів та Drag-and-Drop
-    console.log("Admin map initialized");
-    // ... load tables and add drag events ...
-}
+    map.innerHTML = '';
 
+    try {
+        const response = await fetch('/api/tables'); 
+        const tables = await response.json();
+
+        tables.forEach(table => {
+            const div = document.createElement('div');
+
+            div.className = `table-item admin-draggable ${table.shape === 'round' ? 'shape-round' : 'shape-square'}`;
+
+            div.style.left = (table.posX || 0) + 'px';
+            div.style.top = (table.posY || 0) + 'px';
+            div.innerText = table.id;
+            div.draggable = true;
+
+            div.addEventListener('dragend', (e) => {
+                const rect = map.getBoundingClientRect();
+
+                const x = Math.round(e.clientX - rect.left);
+                const y = Math.round(e.clientY - rect.top);
+
+                const safeX = Math.max(0, Math.min(x, rect.width - 50));
+                const safeY = Math.max(0, Math.min(y, rect.height - 50));
+
+                div.style.left = `${safeX}px`;
+                div.style.top = `${safeY}px`;
+                
+                updatePositionOnServer(table.id, safeX, safeY);
+            });
+
+            map.appendChild(div);
+        });
+    } catch (err) {
+        console.error("Error loading tables:", err);
+    }
+}
 
 async function updatePositionOnServer(id, x, y) {
     const params = new URLSearchParams({ x, y });
@@ -68,8 +74,8 @@ async function updatePositionOnServer(id, x, y) {
         const response = await fetch(`/api/admin/tables/${id}/position?${params}`, {
             method: 'PATCH'
         });
-        if (!response.ok) throw new Error("Server rejected update");
-        console.log(`Table ${id} saved at ${x}, ${y}`);
+        if (!response.ok) throw new Error("Server error");
+        console.log(`Table ${id} saved at X:${x}, Y:${y}`);
     } catch (err) {
         console.error("Save failed:", err);
     }

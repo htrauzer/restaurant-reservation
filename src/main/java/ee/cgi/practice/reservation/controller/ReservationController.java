@@ -32,10 +32,8 @@ public class ReservationController {
     private final TableRepository tableRepository;
     private final RecommendationService recommendationService;
     private final ReservationService reservationService;
-    // 1. ДОДАНО ПОЛЕ ДЛЯ СЕРВІСУ
     private final BookingService bookingService;
 
-    // 2. ОНОВЛЕНО КОНСТРУКТОР (додано BookingService)
     public ReservationController(ReservationRepository reservationRepository, 
                                  TableRepository tableRepository, 
                                  RecommendationService recommendationService,
@@ -48,9 +46,6 @@ public class ReservationController {
         this.bookingService = bookingService;
     }
 
-    /**
-     * 1. Розумний пошук (ReservationService)
-     */
     @GetMapping("/find-available")
     public List<Long> findAvailable(@RequestParam int hour, 
                                     @RequestParam int guests, 
@@ -63,9 +58,6 @@ public class ReservationController {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * 2. Рекомендація найкращого варіанту (RecommendationService)
-     */
     @GetMapping("/recommend")
     public List<Long> getRecommendations(
             @RequestParam int hour,
@@ -78,9 +70,6 @@ public class ReservationController {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * 3. Статус зайнятості (Сірі столи)
-     */
     @GetMapping("/occupied")
     public List<Long> getOccupiedTables(@RequestParam int hour) {
         LocalDateTime targetTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(hour, 0));
@@ -91,9 +80,6 @@ public class ReservationController {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * 4. Збереження нового бронювання
-     */
     @PostMapping("/book")
     public ResponseEntity<?> bookTable(@RequestParam String name, 
                                     @RequestParam int guests, 
@@ -101,7 +87,6 @@ public class ReservationController {
                                     @RequestParam List<Long> tableIds) {
         try {
             LocalDateTime start = LocalDateTime.of(LocalDate.now(), LocalTime.of(hour, 0));
-            // Тепер змінна bookingService доступна
             List<Reservation> result = bookingService.createBooking(name, guests, tableIds, start);
             return ResponseEntity.ok("Reserved " + result.size() + " table(s) for " + name);
         } catch (Exception e) {

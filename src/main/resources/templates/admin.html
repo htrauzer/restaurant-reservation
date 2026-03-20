@@ -1,12 +1,25 @@
-<link rel="stylesheet" href="css/base.css">
-<link rel="stylesheet" href="css/layout.css">
-<link rel="stylesheet" href="css/admin.css">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - Table Editor</title>
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/layout.css">
+    <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
 
-<h2>Restaurant Layout Editor (Drag & Drop)</h2>
-<div id="admin-map" style="position: relative; width: 800px; height: 600px; border: 2px dashed #ccc; background: #f9f9f9;">
-    </div>
+    <header class="main-header">
+        <h1>Restaurant Layout Editor</h1>
+        <button onclick="location.href='/'" class="btn-secondary">Back to Map</button>
+    </header>
 
-<script type="module">
-    import { initAdminMap } from './js/admin-logic.js';
-    document.addEventListener('DOMContentLoaded', initAdminMap);
-</script>
+    <div id="admin-map" style="position: relative; width: 500px; height: 700px;"></div>
+
+    <script type="module">
+        import { initAdminMap } from '/js/admin-logic.js';
+        document.addEventListener('DOMContentLoaded', initAdminMap);
+    </script>
+
+</body>
+</html>
