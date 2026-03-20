@@ -38,11 +38,16 @@ export async function initAdminMap() {
 
         tables.forEach(table => {
             const div = document.createElement('div');
+            console.log("Table data:", table);
 
             div.className = `table-item admin-draggable ${table.shape === 'round' ? 'shape-round' : 'shape-square'}`;
+            
+            const x = (table.posX && table.posX !== 0) ? table.posX : defaultX;
+            const y = (table.posY && table.posY !== 0) ? table.posY : defaultY;
+            const scale = 5;
 
-            div.style.left = (table.posX || 0) + 'px';
-            div.style.top = (table.posY || 0) + 'px';
+            div.style.left = (x * scale) + "px";
+            div.style.top = (y * scale) + "px";
             div.innerText = table.id;
             div.draggable = true;
 
@@ -52,8 +57,8 @@ export async function initAdminMap() {
                 const x = Math.round(e.clientX - rect.left);
                 const y = Math.round(e.clientY - rect.top);
 
-                const safeX = Math.max(0, Math.min(x, rect.width - 50));
-                const safeY = Math.max(0, Math.min(y, rect.height - 50));
+                const safeX = Math.max(0, Math.min(x, rect.width - 25));
+                const safeY = Math.max(0, Math.min(y, rect.height - 25));
 
                 div.style.left = `${safeX}px`;
                 div.style.top = `${safeY}px`;
