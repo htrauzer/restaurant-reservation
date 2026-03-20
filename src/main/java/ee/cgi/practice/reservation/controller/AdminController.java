@@ -25,10 +25,14 @@ public class AdminController {
             @PathVariable Long id, 
             @RequestParam int x, 
             @RequestParam int y) {
+
+        // Protection from going out of bounds (e.g., 0-800)
+        int safeX = Math.max(0, Math.min(x, 750));
+        int safeY = Math.max(0, Math.min(y, 550));
         
         return tableRepository.findById(id).map(table -> {
-            table.setPosX(x);
-            table.setPosY(y);
+            table.setPosX(safeX);
+            table.setPosY(safeY);
             tableRepository.save(table);
             return ResponseEntity.ok().build();
         }).orElse(ResponseEntity.notFound().build());
