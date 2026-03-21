@@ -182,6 +182,15 @@ mvn test -Dtest=ReservationServiceTest
 
 ## Time spend on the project 50 hours
 
+## The Role of AI in the Workflow
+I treated AI as a senior pair programmer during this project. Instead of letting it "write the app," I used it to bounce ideas off of and to help bridge the gap between my logic and the final implementation.
+
+> Architectural Decisions: I designed the core logic for the scoring and reservation systems, then used AI to compare different implementation patterns. This helped me settle on a point-based recommendation system that is both flexible and easy to test.
+
+> Debugging & Refactoring: When shifting from a monolithic structure to a modular one, I used AI to quickly catch syntax errors and "boilerplate" issues that come with moving code between files. This allowed me to focus on the big-picture architecture rather than hunting for missing semicolons.
+
+> Best Practices: I used it as a real-time documentation tool to explore the most efficient ways to handle Java Streams and Date/Time comparisons, ensuring the code is not just working, but written to modern standards.
+
 
 ## PROJECT ISSUE LOG AND RESOLUTION SUMMARY
 
