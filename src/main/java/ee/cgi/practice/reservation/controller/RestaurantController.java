@@ -10,6 +10,8 @@ import ee.cgi.practice.reservation.model.RestaurantTable;
 import ee.cgi.practice.reservation.repository.TableRepository;
 import ee.cgi.practice.reservation.service.MealService;
 
+
+// handles the main page, displaying the map with tables and the meal of the day.
 @Controller
 public class RestaurantController {
 
@@ -21,6 +23,7 @@ public class RestaurantController {
         this.mealService = mealService;
     }
 
+    //ShowING the main page with the restaurant map and meal of the day
    @GetMapping("/")
     public String showMap(Model model) {
         List<RestaurantTable> allTables = tableRepository.findAll();

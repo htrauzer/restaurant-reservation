@@ -24,6 +24,8 @@ import ee.cgi.practice.reservation.service.BookingService;
 import ee.cgi.practice.reservation.service.RecommendationService;
 import ee.cgi.practice.reservation.service.ReservationService;
 
+
+// This controller handles all reservation-related endpoints, including finding available tables, getting recommendations, and booking tables.
 @RestController
 @RequestMapping("/api/reservations")
 public class ReservationController {
@@ -46,6 +48,8 @@ public class ReservationController {
         this.bookingService = bookingService;
     }
 
+
+    // Endpoint to find available tables based on hour, number of guests, and zone
     @GetMapping("/find-available")
     public List<Long> findAvailable(@RequestParam int hour, 
                                     @RequestParam int guests, 
@@ -58,6 +62,7 @@ public class ReservationController {
                 .collect(Collectors.toList());
     }
 
+    // Endpoint to get table recommendations based on hour, number of guests, zone, and optional features
     @GetMapping("/recommend")
     public List<Long> getRecommendations(
             @RequestParam int hour,
@@ -70,6 +75,7 @@ public class ReservationController {
                 .collect(Collectors.toList());
     }
 
+    // Endpoint to get occupied tables for a specific hour
     @GetMapping("/occupied")
     public List<Long> getOccupiedTables(@RequestParam int hour) {
         LocalDateTime targetTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(hour, 0));
@@ -80,6 +86,7 @@ public class ReservationController {
                 .collect(Collectors.toList());
     }
 
+    // Endpoint to book tables for a reservation
     @PostMapping("/book")
     public ResponseEntity<?> bookTable(@RequestParam String name, 
                                     @RequestParam int guests, 

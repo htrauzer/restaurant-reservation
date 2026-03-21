@@ -26,21 +26,22 @@ public class OccupancyGenerator {
         this.reservationRepository = reservationRepository;
     }
 
+        // This method generates random reservations for the current day to simulate high occupancy. 
         @PostConstruct
         public void generateRandomOccupancy() {
             List<RestaurantTable> allTables = tableRepository.findAll();
             LocalDate today = LocalDate.now();
 
             for (RestaurantTable table : allTables) {
-                // Починаємо з відкриття (12:00) і йдемо до закриття (23:00)
+                //Starting from opening (12:00) and going to closing (23:00)
                 int currentHour = 12;
                 
                 while (currentHour <= 21) { 
-                    // Шанс 60% на бронювання в будь-який вільний проміжок часу
+                    // 60% chance of booking during any available time slot
                     if (random.nextDouble() < 0.6) {
-                        int duration = 2 + random.nextInt(2); // Бронювання на 2 або 3 години
+                        int duration = 2 + random.nextInt(2); // 2 or 3 hours booking
                         
-                        // Перевіряємо, щоб броня не виходила за межі робочого дня (23:00)
+                        // Check that the booking doesn't exceed the working day (23:00)
                         if (currentHour + duration > 23) {
                             duration = 23 - currentHour;
                         }
@@ -49,10 +50,10 @@ public class OccupancyGenerator {
                             createRes(table, today, currentHour, duration);
                         }
                         
-                        // Після броні стіл не може бути зайнятий миттєво (даємо 1 годину на прибирання)
+                        // After booking, the table cannot be booked immediately (we give 1 hour for cleaning)
                         currentHour += (duration + 1); 
                     } else {
-                        // Якщо не заброньовано, пробуємо наступну годину
+                        // If not booked, try the next hour
                         currentHour += 1;
                     }
                 }

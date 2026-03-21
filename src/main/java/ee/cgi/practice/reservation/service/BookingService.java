@@ -12,6 +12,7 @@ import ee.cgi.practice.reservation.model.RestaurantTable;
 import ee.cgi.practice.reservation.repository.ReservationRepository;
 import ee.cgi.practice.reservation.repository.TableRepository;
 
+// Service responsible for handling the booking logic, including checking for overlapping reservations and creating new bookings.
 @Service
 public class BookingService {
 
@@ -27,11 +28,12 @@ public class BookingService {
         this.reservationService = reservationService;
     }
 
+    // Creates a new booking for the specified customer, number of guests, table IDs, and start time.
     @Transactional
     public List<Reservation> createBooking(String customerName, int guests, List<Long> tableIds, LocalDateTime startTime) {
         List<Reservation> createdReservations = new ArrayList<>();
         LocalDateTime endTime = startTime.plusHours(2); 
-
+        
         for (Long id : tableIds) {
             RestaurantTable table = tableRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Table not found: " + id));
@@ -43,7 +45,7 @@ public class BookingService {
             if (isBusy) {
                 throw new RuntimeException("Next booking too soon");
             }
-
+            
             Reservation reservation = new Reservation(table, startTime, guests, customerName);
             createdReservations.add(reservationRepository.save(reservation));
         }

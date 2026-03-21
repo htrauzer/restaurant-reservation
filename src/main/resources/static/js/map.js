@@ -1,11 +1,11 @@
 export const MapUI = {
     resetTables() {
         document.querySelectorAll('.table-item').forEach(tableDiv => {
-            // ДОДАНО: Якщо стіл щойно заброньований (фіолетовий), не чіпаємо його
+            // If the table is just booked (purple), we don't touch it
             if (tableDiv.classList.contains('status-just-booked')) return;
 
             if (!tableDiv.classList.contains('status-reserved')) {
-                tableDiv.style.backgroundColor = "#2ecc71"; // Зелений
+                tableDiv.style.backgroundColor = "#2ecc71"; // Green
                 tableDiv.style.boxShadow = "none";
                 tableDiv.style.border = "none";
                 tableDiv.style.pointerEvents = "auto";
@@ -48,7 +48,7 @@ export const MapUI = {
         tableIds.forEach(id => {
             const tableDiv = document.querySelector(`.table-item[data-id="${id}"]`);
             if (tableDiv) {
-                // Якщо ми знайшли стіл через Search, він теж стає клікабельним
+                // If we found a table through Search, it also becomes clickable
                 tableDiv.style.backgroundColor = "#f1c40f"; 
                 tableDiv.style.boxShadow = "0 0 15px #f1c40f";
                 tableDiv.style.border = "2px solid white";

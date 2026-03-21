@@ -1,5 +1,6 @@
 import { MapUI } from './map.js';
 
+// UI Handlers for managing user interactions with the booking modal, time selection, and filter options. It also includes a function to show toast notifications for success or error messages.
 export function showToast(message, type = 'success') {
     const toast = document.createElement('div');
     toast.className = `toast toast-${type}`;
@@ -7,13 +8,14 @@ export function showToast(message, type = 'success') {
     
     document.body.appendChild(toast);
     
-    // Автоматичне видалення через 3 секунди
+    // Automatic removal after 3 seconds
     setTimeout(() => {
         toast.classList.add('fade-out');
         setTimeout(() => toast.remove(), 500);
     }, 3000);
 }
 
+// Initializes the UI by setting up event listeners for zone selection, guest count changes, and feature filters, allowing the map to refresh based on user input.
 export function initUI(refreshCallback) {
     
     document.querySelectorAll('input[name="zone"]').forEach(radio => {
@@ -63,6 +65,7 @@ window.closeModal = () => {
     document.getElementById('bookingModal').style.display = 'none';
 };
 
+// Closes the booking modal when the user clicks outside of it or on the close button.
 window.confirmBooking = async () => {
     const name = document.getElementById('customerName').value;
     if (!name) return alert("Please enter your name!");

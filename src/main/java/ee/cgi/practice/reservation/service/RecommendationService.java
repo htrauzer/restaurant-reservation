@@ -15,6 +15,7 @@ import ee.cgi.practice.reservation.model.Zone;
 import ee.cgi.practice.reservation.repository.ReservationRepository;
 import ee.cgi.practice.reservation.repository.TableRepository;
 
+// Recommending the best available tables based on customer preferences and current occupancy.
 @Service
 public class RecommendationService {
 
@@ -26,9 +27,6 @@ public class RecommendationService {
         this.reservationRepository = reservationRepository;
     }
 
-    /**
-     * Рекомендує список найкращих вільних столів на основі параметрів.
-     */
     public List<RestaurantTable> recommendTables(int hour, int guests, Zone preferredZone, Set<TableFeature> prefs) {
       
         LocalDateTime targetTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(hour, 0));
@@ -56,19 +54,19 @@ public class RecommendationService {
     private int calculatePoints(RestaurantTable table, int guests, Zone zone, Set<TableFeature> prefs) {
         int points = 0;
 
-        // +20 балів за збіг із обраною зоною (актуально при пошуку по всьому залу)
+        // +20 points for matching the preferred zone (relevant when searching across the entire restaurant)
         if (zone != null && table.getZone() == zone) {
             points += 20;
         }
 
-        // +10 балів за ідеальний розмір (без зайвих порожніх місць)
+        // +10 points for ideal size (without unnecessary empty seats)
         if (table.getCapacity() == guests) {
             points += 10;
         } else if (table.getCapacity() == guests + 1) {
             points += 5;
         }
 
-        // +5 балів за кожну фішку (Window, Sofa тощо)
+        // +5 points for each requested feature (Window, Sofa etc.)
         if (prefs != null && table.getFeatures() != null) {
             for (TableFeature pref : prefs) {
                 if (table.getFeatures().contains(pref)) {

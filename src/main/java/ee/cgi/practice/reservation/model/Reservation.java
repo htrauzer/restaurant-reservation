@@ -11,6 +11,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
+// Reservation made by a customer for a specific table and time slot.
 @Entity
 @Table(name = "reservations")
 @Data 
@@ -20,6 +21,7 @@ public class Reservation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // Each reservation is linked to a specific restaurant table.
     @ManyToOne
     @JoinColumn(name = "table_id")
     private RestaurantTable restaurantTable; 

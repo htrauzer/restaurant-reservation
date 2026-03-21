@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+// Service responsible for fetching the meal of the day from an external API and providing a recommendation to customers.
 @Service
 public class MealService {
 
@@ -16,6 +17,7 @@ public class MealService {
         this.restTemplate = restTemplate;
     }
 
+    // Fetches a random meal from TheMealDB API 
     public String getMealOfTheDay() {
         try {
             // Get API response

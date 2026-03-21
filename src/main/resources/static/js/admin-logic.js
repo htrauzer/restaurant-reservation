@@ -1,15 +1,16 @@
 import { ReservationAPI } from './api.js';
 
+// Admin login modal logic and admin map management for table positioning.
 window.openAdminModal = () => {
     const modal = document.getElementById('adminLoginModal');
     if (modal) modal.style.display = 'flex';
 };
-
+// Closes the admin login modal when the user clicks outside of it or on the close button.
 window.closeAdminModal = () => {
     const modal = document.getElementById('adminLoginModal');
     if (modal) modal.style.display = 'none';
 };
-
+// Handles the admin login process by checking hardcoded credentials and redirecting to the admin page if successful.
 window.processAdminLogin = () => {
     const user = document.getElementById('adminUser').value;
     const pass = document.getElementById('adminPass').value;
@@ -25,7 +26,7 @@ window.processAdminLogin = () => {
         }
     }
 };
-
+// Initializes the admin map by fetching table data from the server and creating draggable elements for each table, allowing admins to reposition them visually.
 export async function initAdminMap() {
     const map = document.getElementById('admin-map');
     if (!map) return;
@@ -59,7 +60,7 @@ export async function initAdminMap() {
 
                 const safeX = Math.max(0, Math.min(x, rect.width - 25));
                 const safeY = Math.max(0, Math.min(y, rect.height - 25));
-
+                // Update the position of the table element on the map.
                 div.style.left = `${safeX}px`;
                 div.style.top = `${safeY}px`;
                 
@@ -72,7 +73,7 @@ export async function initAdminMap() {
         console.error("Error loading tables:", err);
     }
 }
-
+// Sends an asynchronous PATCH request to the server to update the position of a table based on its ID and new coordinates, ensuring that the changes are saved persistently.
 async function updatePositionOnServer(id, x, y) {
     const params = new URLSearchParams({ x, y });
     try {

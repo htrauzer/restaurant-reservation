@@ -15,6 +15,7 @@ import ee.cgi.practice.reservation.model.Zone;
 import ee.cgi.practice.reservation.repository.ReservationRepository;
 import ee.cgi.practice.reservation.repository.TableRepository;
 
+// Service responsible for handling the booking logic, including checking for overlapping reservations and creating new bookings.
 @Service
 public class ReservationService {
 
@@ -26,6 +27,7 @@ public class ReservationService {
         this.reservationRepository = reservationRepository;
     }
 
+    // Finds available tables based on the number of guests, preferred zone, and requested time slot.
     public List<RestaurantTable> findAvailableTables(int guests, Zone zone, LocalDateTime requestedStart) {
         LocalDateTime requestedEnd = requestedStart.plusHours(2);
         

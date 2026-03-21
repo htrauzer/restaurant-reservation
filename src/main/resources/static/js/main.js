@@ -5,6 +5,7 @@ import { showToast } from './ui-handlers.js';
 
 let currentSelectedHour = null;
 
+// Main logic for handling user interactions, including time selection, table filtering, and booking modal management. It interacts with the ReservationAPI to fetch data and update the UI accordingly.
 async function refreshTableLayout() {
     if (!currentSelectedHour) return;
 
@@ -27,13 +28,13 @@ async function refreshTableLayout() {
     }
 }
 
-// --- ФУНКЦІЇ МОДАЛЬНОГО ВІКНА ---
+// Functions of Modal window
 
 window.openBookingModal = (clickedTableId) => {
     const guests = document.getElementById('guestCount').value;
     
-    // Зберігаємо ID столу, який ми хочемо забронювати
-    // Можна зберегти його в атрибут модалки або глобальну змінну
+    // Saving ID of the table, which we want to book
+    // Can save it in a modal attribute or a global variable
     window.lastSelectedTableId = clickedTableId;
 
     document.getElementById('modalDetails').innerText = 
@@ -42,6 +43,7 @@ window.openBookingModal = (clickedTableId) => {
     document.getElementById('bookingModal').style.display = 'flex';
 };
 
+// Closes the booking modal when the user clicks outside of it or on the close button.
 window.confirmBooking = async () => {
     const nameInput = document.getElementById('customerName');
     const name = nameInput.value;
@@ -84,6 +86,7 @@ window.confirmBooking = async () => {
     }
 };
 
+// Displays an error message in the booking modal's status area or as a toast notification if the status div is not available, and automatically clears the message after a few seconds to keep the UI clean.
 function showErrorMessage(message) {
     const statusDiv = document.getElementById('bookingStatus');
     if (statusDiv) {
@@ -96,23 +99,25 @@ function showErrorMessage(message) {
         showToast(message, 'error');
     }
 }
-
+// Closes the booking modal when the user clicks outside of it or on the close button.
 window.closeModal = () => {
     const modal = document.getElementById('bookingModal');
     if (modal) {
         modal.style.display = 'none';
     }
 };
-// --- ГЛОБАЛЬНІ ФУНКЦІЇ ---
 
+//  Global Functions
+// Handles the selection of a time slot by updating the current selected hour, refreshing the table layout to reflect availability for that hour, and visually indicating the active time slot in the UI.
 window.selectTime = (element, hour) => {
-    MapUI.clearJustBooked(); // Скидаємо фіолетові столи при зміні часу
+    MapUI.clearJustBooked(); // Updating purple tables when time is changed
     currentSelectedHour = hour;
     document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('active'));
     element.classList.add('active');
     refreshTableLayout();
 };
 
+// Opens the admin login modal when the user clicks the admin button, allowing them to enter credentials to access the admin interface.
 window.filterTables = async () => {
     MapUI.clearJustBooked();
     if (!currentSelectedHour) return alert("Select time first!");
